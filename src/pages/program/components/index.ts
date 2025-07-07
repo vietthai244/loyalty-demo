@@ -19,6 +19,7 @@ export { NodeToolbar, createNodeToolbarActions } from './NodeToolbar'
 // Export types
 export type { NodeType } from './NodePalette'
 export type { NodeToolbarAction, NodeToolbarProps } from './NodeToolbar'
+export type { PanelMode } from './NodePropertyPanel'
 
 // Union type for all node data
 import type { OperatorNodeData } from './OperatorNode'

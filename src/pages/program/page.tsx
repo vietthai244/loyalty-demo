@@ -23,7 +23,8 @@ import {
   CreateNodeButton,
   NodePalette,
   NodePropertyPanel,
-  type NodeType
+  type NodeType,
+  type PanelMode
 } from './components'
 
 // Node types configuration with handlers
@@ -43,6 +44,12 @@ function ProgramCanvas() {
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([])
   const [selectedNode, setSelectedNode] = useState<Node | null>(null)
   const [isPaletteOpen, setIsPaletteOpen] = useState(false)
+  
+  // NodePropertyPanel state
+  const [isPanelVisible, setIsPanelVisible] = useState(false)
+  const [panelMode, setPanelMode] = useState<PanelMode>('creation')
+  const [editingNode, setEditingNode] = useState<Node | null>(null)
+  
   const reactFlowWrapper = useRef<HTMLDivElement>(null)
 
   const onConnect = useCallback(
@@ -102,6 +109,11 @@ function ProgramCanvas() {
       }
 
       setNodes((nds) => [...nds, newNode])
+      
+      // Open panel in creation mode for the new node
+      setEditingNode(newNode)
+      setPanelMode('creation')
+      setIsPanelVisible(true)
     },
     [setNodes]
   )
@@ -111,6 +123,7 @@ function ProgramCanvas() {
       setNodes((nds) => nds.filter((node) => node.id !== selectedNode.id))
       setEdges((eds) => eds.filter((edge) => edge.source !== selectedNode.id && edge.target !== selectedNode.id))
       setSelectedNode(null)
+      setIsPanelVisible(false)
     }
   }, [selectedNode, setNodes, setEdges])
 
@@ -120,12 +133,20 @@ function ProgramCanvas() {
     if (selectedNode?.id === nodeId) {
       setSelectedNode(null)
     }
-  }, [setNodes, setEdges, selectedNode])
+    if (editingNode?.id === nodeId) {
+      setEditingNode(null)
+      setIsPanelVisible(false)
+    }
+  }, [setNodes, setEdges, selectedNode, editingNode])
 
   const editNode = useCallback((nodeId: string) => {
-    // TODO: Implement edit functionality
-    console.log('Edit node:', nodeId)
-  }, [])
+    const node = nodes.find(n => n.id === nodeId)
+    if (node) {
+      setEditingNode(node)
+      setPanelMode('edit')
+      setIsPanelVisible(true)
+    }
+  }, [nodes])
 
   const toggleNodeActive = useCallback((nodeId: string) => {
     setNodes((nds) =>
@@ -158,33 +179,64 @@ function ProgramCanvas() {
       y: reactFlowBounds.height / 2 - 50,  // Offset by half node height
     }
 
-          const newNode: Node = {
-        id: `${nodeType}-${Date.now()}`,
-        type: nodeType,
-        position,
-        data: { 
-          label: nodeType.charAt(0).toUpperCase() + nodeType.slice(1),
-          isActive: true,
-          ...(nodeType === 'operator' && { operatorType: 'SUM' as const }),
-          ...(nodeType === 'constraint' && { parameter: 'tx_type' }),
-          ...(nodeType === 'distribution' && { distributionType: 'do_to_distribution' })
-        },
-      }
+    const newNode: Node = {
+      id: `${nodeType}-${Date.now()}`,
+      type: nodeType,
+      position,
+      data: { 
+        label: nodeType.charAt(0).toUpperCase() + nodeType.slice(1),
+        isActive: true,
+        ...(nodeType === 'operator' && { operatorType: 'SUM' as const }),
+        ...(nodeType === 'constraint' && { parameter: 'tx_type' }),
+        ...(nodeType === 'distribution' && { distributionType: 'do_to_distribution' })
+      },
+    }
 
     setNodes((nds) => [...nds, newNode])
     setIsPaletteOpen(false) // Close the palette after adding node
+    
+    // Open panel in creation mode for the new node
+    setEditingNode(newNode)
+    setPanelMode('creation')
+    setIsPanelVisible(true)
   }, [setNodes])
 
+  const handleSaveNode = useCallback((nodeData: any) => {
+    if (editingNode) {
+      setNodes((nds) =>
+        nds.map((node) =>
+          node.id === editingNode.id
+            ? {
+                ...node,
+                data: {
+                  ...node.data,
+                  ...nodeData,
+                },
+              }
+            : node
+        )
+      )
+      
+      // Update selectedNode if it's the same as editingNode
+      if (selectedNode?.id === editingNode.id) {
+        setSelectedNode({
+          ...selectedNode,
+          data: {
+            ...selectedNode.data,
+            ...nodeData,
+          },
+        })
+      }
+    }
+  }, [editingNode, setNodes, selectedNode])
 
+  const handleClosePanel = useCallback(() => {
+    setIsPanelVisible(false)
+    setEditingNode(null)
+  }, [])
 
   return (
     <Box sx={{ display: 'flex', height: '100%', width: '100%' }}>
-      {/* Left Sidebar - Property Panel */}
-      <NodePropertyPanel
-        selectedNode={selectedNode}
-        onDeleteNode={deleteSelectedNode}
-      />
-
       {/* Main Canvas */}
       <Box sx={{ flexGrow: 1, position: 'relative' }} ref={reactFlowWrapper}>
         <ReactFlow
@@ -218,6 +270,16 @@ function ProgramCanvas() {
         onClose={() => setIsPaletteOpen(false)}
         onDragStart={onDragStart}
         onNodeClick={addNodeToCanvas}
+      />
+
+      {/* Node Property Panel Modal */}
+      <NodePropertyPanel
+        isVisible={isPanelVisible}
+        mode={panelMode}
+        selectedNode={editingNode}
+        onClose={handleClosePanel}
+        onDeleteNode={deleteSelectedNode}
+        onSaveNode={handleSaveNode}
       />
     </Box>
   )
