@@ -10,14 +10,7 @@ import {
   ReactFlowProvider
 } from '@xyflow/react'
 import type { Node, Edge, Connection, NodeTypes } from '@xyflow/react'
-import { Box, Typography, Paper, Divider, IconButton, Tooltip } from '@mui/material'
-import {
-  Functions as OperatorIcon,
-  Rule as RuleIcon,
-  FilterList as ConstraintIcon,
-  AccountBalance as DistributionIcon,
-  Delete as DeleteIcon
-} from '@mui/icons-material'
+import { Box } from '@mui/material'
 import '@xyflow/react/dist/style.css'
 
 // Import node components and types
@@ -26,11 +19,14 @@ import {
   RuleNode,
   ConstraintNode,
   DistributionNode,
-  type ProgramNodeData
+  type ProgramNodeData,
+  CreateNodeButton,
+  NodePalette,
+  NodePropertyPanel,
+  type NodeType
 } from './components'
 
 // Node types configuration
-
 const nodeTypes: NodeTypes = {
   operator: OperatorNode,
   rule: RuleNode,
@@ -38,40 +34,11 @@ const nodeTypes: NodeTypes = {
   distribution: DistributionNode,
 }
 
-// Palette items for drag and drop
-const paletteItems = [
-  {
-    type: 'operator',
-    label: 'Operator',
-    icon: <OperatorIcon />,
-    description: 'SUM, MAX, SHARE, AND, OR'
-  },
-  {
-    type: 'rule',
-    label: 'Reward Rule',
-    icon: <RuleIcon />,
-    description: 'Define reward logic'
-  },
-  {
-    type: 'constraint',
-    label: 'Constraint',
-    icon: <ConstraintIcon />,
-    description: 'Set conditions and filters'
-  },
-  {
-    type: 'distribution',
-    label: 'Distribution',
-    icon: <DistributionIcon />,
-    description: 'Configure point distribution'
-  }
-] as const
-
-type NodeType = typeof paletteItems[number]['type']
-
 function ProgramCanvas() {
-  const [nodes, setNodes, onNodesChange] = useNodesState([])
-  const [edges, setEdges, onEdgesChange] = useEdgesState([])
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([])
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([])
   const [selectedNode, setSelectedNode] = useState<Node | null>(null)
+  const [isPaletteOpen, setIsPaletteOpen] = useState(false)
   const reactFlowWrapper = useRef<HTMLDivElement>(null)
 
   const onConnect = useCallback(
@@ -147,67 +114,41 @@ function ProgramCanvas() {
     event.dataTransfer.effectAllowed = 'move'
   }
 
-  const getNodeDataDisplay = (node: Node) => {
-    const data = node.data as any
-    switch (node.type) {
-      case 'operator':
-        return `Operator: ${data.operatorType || 'Not set'}`
-      case 'constraint':
-        return `Parameter: ${data.parameter || 'Not set'}`
-      case 'distribution':
-        return `Distribution: ${data.distributionType || 'Not set'}`
-      default:
-        return `Type: ${node.type}`
+  const addNodeToCanvas = useCallback((nodeType: NodeType) => {
+    const reactFlowBounds = reactFlowWrapper.current?.getBoundingClientRect()
+    if (!reactFlowBounds) return
+
+    // Calculate center position of the canvas
+    const position = {
+      x: reactFlowBounds.width / 2 - 100, // Offset by half node width
+      y: reactFlowBounds.height / 2 - 50,  // Offset by half node height
     }
-  }
+
+    const newNode: Node = {
+      id: `${nodeType}-${Date.now()}`,
+      type: nodeType,
+      position,
+      data: { 
+        label: nodeType.charAt(0).toUpperCase() + nodeType.slice(1),
+        ...(nodeType === 'operator' && { operatorType: 'SUM' as const }),
+        ...(nodeType === 'constraint' && { parameter: 'tx_type' }),
+        ...(nodeType === 'distribution' && { distributionType: 'do_to_distribution' })
+      },
+    }
+
+    setNodes((nds) => [...nds, newNode])
+    setIsPaletteOpen(false) // Close the palette after adding node
+  }, [setNodes])
+
+
 
   return (
     <Box sx={{ display: 'flex', height: '100%', width: '100%' }}>
-      {/* Left Sidebar - Palette */}
-      <Paper
-        elevation={2}
-        sx={{
-          width: 250,
-          p: 2,
-          backgroundColor: '#f5f5f5',
-          borderRight: '1px solid #e0e0e0',
-        }}
-      >
-        <Typography variant="h6" gutterBottom>
-          Node Palette
-        </Typography>
-        <Divider sx={{ mb: 2 }} />
-        
-        {paletteItems.map((item) => (
-          <Paper
-            key={item.type}
-            elevation={1}
-            sx={{
-              p: 2,
-              mb: 2,
-              cursor: 'grab',
-              backgroundColor: 'white',
-              '&:hover': {
-                backgroundColor: '#f0f0f0',
-                transform: 'translateY(-1px)',
-                transition: 'all 0.2s ease-in-out',
-              },
-            }}
-            draggable
-            onDragStart={(event) => onDragStart(event, item.type)}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-              {item.icon}
-              <Typography variant="subtitle2" fontWeight="bold">
-                {item.label}
-              </Typography>
-            </Box>
-            <Typography variant="caption" color="text.secondary">
-              {item.description}
-            </Typography>
-          </Paper>
-        ))}
-      </Paper>
+      {/* Left Sidebar - Property Panel */}
+      <NodePropertyPanel
+        selectedNode={selectedNode}
+        onDeleteNode={deleteSelectedNode}
+      />
 
       {/* Main Canvas */}
       <Box sx={{ flexGrow: 1, position: 'relative' }} ref={reactFlowWrapper}>
@@ -229,54 +170,20 @@ function ProgramCanvas() {
           <Background />
           <MiniMap />
         </ReactFlow>
+
+        {/* Centered Add Button - Only show when no nodes exist */}
+        {nodes.length === 0 && (
+          <CreateNodeButton onOpenPalette={() => setIsPaletteOpen(true)} />
+        )}
       </Box>
 
-      {/* Right Sidebar - Property Panel */}
-      <Paper
-        elevation={2}
-        sx={{
-          width: 300,
-          p: 2,
-          backgroundColor: '#f5f5f5',
-          borderLeft: '1px solid #e0e0e0',
-        }}
-      >
-        <Typography variant="h6" gutterBottom>
-          Properties
-        </Typography>
-        <Divider sx={{ mb: 2 }} />
-        
-        {selectedNode ? (
-          <Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-              <Typography variant="subtitle1" fontWeight="bold">
-                {selectedNode.data.label}
-              </Typography>
-              <Tooltip title="Delete Node">
-                <IconButton 
-                  size="small" 
-                  color="error" 
-                  onClick={deleteSelectedNode}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </Tooltip>
-            </Box>
-            
-            <Typography variant="body2" color="text.secondary" gutterBottom>
-              Node Type: {selectedNode.type}
-            </Typography>
-            
-            <Typography variant="body2" color="text.secondary">
-              {getNodeDataDisplay(selectedNode)}
-            </Typography>
-          </Box>
-        ) : (
-          <Typography variant="body2" color="text.secondary">
-            No node selected. Click on a node to view its properties.
-          </Typography>
-        )}
-      </Paper>
+      {/* Node Palette */}
+      <NodePalette
+        isOpen={isPaletteOpen}
+        onClose={() => setIsPaletteOpen(false)}
+        onDragStart={onDragStart}
+        onNodeClick={addNodeToCanvas}
+      />
     </Box>
   )
 }

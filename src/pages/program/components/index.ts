@@ -17,3 +17,7 @@ import type { ConstraintNodeData } from './ConstraintNode'
 import type { DistributionNodeData } from './DistributionNode'
 
 export type ProgramNodeData = OperatorNodeData | RuleNodeData | ConstraintNodeData | DistributionNodeData 
+
+export { CreateNodeButton } from './CreateNodeButton'
+export { NodePalette, type NodeType } from './NodePalette'
+export { NodePropertyPanel } from './NodePropertyPanel' 
