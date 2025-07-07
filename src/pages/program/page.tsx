@@ -32,6 +32,7 @@ const createNodeTypes = (handlers: {
   onDelete: (nodeId: string) => void
   onEdit: (nodeId: string) => void
   onToggleActive: (nodeId: string) => void
+  onOpenPalette: (nodeId?: string, handle?: 'top' | 'bottom') => void
 }): NodeTypes => ({
   operator: (props: any) => <OperatorNode {...props} {...handlers} />,
   rule: (props: any) => <RuleNode {...props} {...handlers} />,
@@ -49,6 +50,10 @@ function ProgramCanvas() {
   const [isPanelVisible, setIsPanelVisible] = useState(false)
   const [panelMode, setPanelMode] = useState<PanelMode>('creation')
   const [editingNode, setEditingNode] = useState<Node | null>(null)
+  
+  // NodePalette state for handle connections
+  const [paletteSourceNodeId, setPaletteSourceNodeId] = useState<string | undefined>()
+  const [paletteSourceHandle, setPaletteSourceHandle] = useState<'top' | 'bottom' | undefined>()
   
   const reactFlowWrapper = useRef<HTMLDivElement>(null)
 
@@ -169,14 +174,35 @@ function ProgramCanvas() {
     event.dataTransfer.effectAllowed = 'move'
   }
 
-  const addNodeToCanvas = useCallback((nodeType: NodeType) => {
+  const addNodeToCanvas = useCallback((nodeType: NodeType, sourceNodeId?: string, sourceHandle?: 'top' | 'bottom') => {
     const reactFlowBounds = reactFlowWrapper.current?.getBoundingClientRect()
     if (!reactFlowBounds) return
 
-    // Calculate center position of the canvas
-    const position = {
-      x: reactFlowBounds.width / 2 - 100, // Offset by half node width
-      y: reactFlowBounds.height / 2 - 50,  // Offset by half node height
+    // Calculate position based on source node if provided
+    let position: { x: number; y: number }
+    
+    if (sourceNodeId && sourceHandle) {
+      const sourceNode = nodes.find(n => n.id === sourceNodeId)
+      if (sourceNode) {
+        // Position the new node below or above the source node
+        const offset = sourceHandle === 'top' ? -120 : 120
+        position = {
+          x: sourceNode.position.x,
+          y: sourceNode.position.y + offset
+        }
+      } else {
+        // Fallback to center if source node not found
+        position = {
+          x: reactFlowBounds.width / 2 - 100,
+          y: reactFlowBounds.height / 2 - 50,
+        }
+      }
+    } else {
+      // Default center position
+      position = {
+        x: reactFlowBounds.width / 2 - 100,
+        y: reactFlowBounds.height / 2 - 50,
+      }
     }
 
     const newNode: Node = {
@@ -195,11 +221,23 @@ function ProgramCanvas() {
     setNodes((nds) => [...nds, newNode])
     setIsPaletteOpen(false) // Close the palette after adding node
     
+    // Create connection if source node is provided
+    if (sourceNodeId && sourceHandle) {
+      const newEdge: Edge = {
+        id: `edge-${sourceNodeId}-${newNode.id}`,
+        source: sourceHandle === 'top' ? newNode.id : sourceNodeId,
+        target: sourceHandle === 'top' ? sourceNodeId : newNode.id,
+        sourceHandle: sourceHandle === 'top' ? 'bottom' : 'top',
+        targetHandle: sourceHandle === 'top' ? 'top' : 'bottom',
+      }
+      setEdges((eds) => [...eds, newEdge])
+    }
+    
     // Open panel in creation mode for the new node
     setEditingNode(newNode)
     setPanelMode('creation')
     setIsPanelVisible(true)
-  }, [setNodes])
+  }, [setNodes, setEdges, nodes])
 
   const handleSaveNode = useCallback((nodeData: any) => {
     if (editingNode) {
@@ -235,6 +273,24 @@ function ProgramCanvas() {
     setEditingNode(null)
   }, [])
 
+  const openPaletteFromHandle = useCallback((nodeId?: string, handle?: 'top' | 'bottom') => {
+    setPaletteSourceNodeId(nodeId)
+    setPaletteSourceHandle(handle)
+    setIsPaletteOpen(true)
+  }, [])
+
+  const openPaletteFromCorner = useCallback(() => {
+    setPaletteSourceNodeId(undefined)
+    setPaletteSourceHandle(undefined)
+    setIsPaletteOpen(true)
+  }, [])
+
+  const closePalette = useCallback(() => {
+    setIsPaletteOpen(false)
+    setPaletteSourceNodeId(undefined)
+    setPaletteSourceHandle(undefined)
+  }, [])
+
   return (
     <Box sx={{ display: 'flex', height: '100%', width: '100%' }}>
       {/* Main Canvas */}
@@ -249,7 +305,12 @@ function ProgramCanvas() {
           onPaneClick={onPaneClick}
           onDragOver={onDragOver}
           onDrop={onDrop}
-          nodeTypes={createNodeTypes({ onDelete: deleteNode, onEdit: editNode, onToggleActive: toggleNodeActive })}
+          nodeTypes={createNodeTypes({ 
+            onDelete: deleteNode, 
+            onEdit: editNode, 
+            onToggleActive: toggleNodeActive,
+            onOpenPalette: openPaletteFromHandle
+          })}
           fitView
           attributionPosition="bottom-left"
         >
@@ -260,16 +321,29 @@ function ProgramCanvas() {
 
         {/* Centered Add Button - Only show when no nodes exist */}
         {nodes.length === 0 && (
-          <CreateNodeButton onOpenPalette={() => setIsPaletteOpen(true)} />
+          <CreateNodeButton 
+            onOpenPalette={openPaletteFromCorner} 
+            variant="center"
+            size="large"
+          />
         )}
+
+        {/* Fixed Create Node Button - Top Right Corner */}
+        <CreateNodeButton
+          onOpenPalette={openPaletteFromCorner}
+          variant="corner"
+          size="medium"
+        />
       </Box>
 
       {/* Node Palette */}
       <NodePalette
         isOpen={isPaletteOpen}
-        onClose={() => setIsPaletteOpen(false)}
+        onClose={closePalette}
         onDragStart={onDragStart}
         onNodeClick={addNodeToCanvas}
+        sourceNodeId={paletteSourceNodeId}
+        sourceHandle={paletteSourceHandle}
       />
 
       {/* Node Property Panel Modal */}

@@ -41,10 +41,19 @@ interface NodePaletteProps {
   isOpen: boolean
   onClose: () => void
   onDragStart: (event: React.DragEvent, nodeType: NodeType) => void
-  onNodeClick: (nodeType: NodeType) => void
+  onNodeClick: (nodeType: NodeType, sourceNodeId?: string, sourceHandle?: 'top' | 'bottom') => void
+  sourceNodeId?: string
+  sourceHandle?: 'top' | 'bottom'
 }
 
-export function NodePalette({ isOpen, onClose, onDragStart, onNodeClick }: NodePaletteProps) {
+export function NodePalette({ 
+  isOpen, 
+  onClose, 
+  onDragStart, 
+  onNodeClick, 
+  sourceNodeId, 
+  sourceHandle 
+}: NodePaletteProps) {
   return (
     <Drawer
       variant="temporary"
@@ -102,7 +111,7 @@ export function NodePalette({ isOpen, onClose, onDragStart, onNodeClick }: NodeP
             }}
             draggable
             onDragStart={(event) => onDragStart(event, item.type)}
-            onClick={() => onNodeClick(item.type)}
+            onClick={() => onNodeClick(item.type, sourceNodeId, sourceHandle)}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
               {item.icon}

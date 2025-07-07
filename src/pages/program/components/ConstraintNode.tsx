@@ -1,35 +1,70 @@
-import { Box, Typography, Paper } from '@mui/material'
-import { FilterList as ConstraintIcon } from '@mui/icons-material'
+import { Box, Typography } from '@mui/material'
 import { Handle, Position } from '@xyflow/react'
 import { NodeToolbar, createNodeToolbarActions } from './NodeToolbar'
+import { CreateNodeButton } from './CreateNodeButton'
 
 export interface ConstraintNodeData {
   label: string
-  parameter?: string
-  comparisonOperator?: string
-  value?: string | number | string[]
+  constraintType?: 'LIMIT' | 'EXCLUSION' | 'REQUIREMENT'
   description?: string
   isActive?: boolean
 }
 
 interface ConstraintNodeProps {
-  data: ConstraintNodeData
-  selected: boolean
-  id: string
-  onDelete?: (nodeId: string) => void
-  onEdit?: (nodeId: string) => void
-  onToggleActive?: (nodeId: string) => void
+  data: {
+    label: string
+    constraintType: string
+    isActive: boolean
+    onEdit: () => void
+    onDelete: () => void
+    onToggleActive: () => void
+    onOpenPalette: (nodeId?: string, handle?: 'top' | 'bottom') => void
+  }
+  selected?: boolean
+  id?: string
 }
 
-const ConstraintNode = ({ data, selected, id, onDelete, onEdit, onToggleActive }: ConstraintNodeProps) => {
+const ConstraintNode = ({ data, selected = false, id = '' }: ConstraintNodeProps) => {
   const toolbarActions = createNodeToolbarActions(
     id,
-    { onDelete, onEdit, onToggleActive },
-    data
+    { 
+      onDelete: data.onDelete, 
+      onEdit: data.onEdit, 
+      onToggleActive: data.onToggleActive 
+    },
+    { isActive: data.isActive }
   )
 
   return (
-    <>
+    <Box
+      sx={{
+        position: 'relative',
+        padding: 2,
+        border: '2px solid #f44336',
+        borderRadius: 2,
+        backgroundColor: data.isActive ? '#ffebee' : '#f5f5f5',
+        minWidth: 150,
+        minHeight: 80,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+        transition: 'all 0.2s ease-in-out',
+        '&:hover': {
+          boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+        },
+      }}
+    >
+      <Handle type="target" position={Position.Top} />
+      
+      <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#f44336', mb: 1 }}>
+        {data.label}
+      </Typography>
+      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        {data.constraintType}
+      </Typography>
+
       <NodeToolbar
         isVisible={selected}
         nodeId={id}
@@ -38,31 +73,15 @@ const ConstraintNode = ({ data, selected, id, onDelete, onEdit, onToggleActive }
         offset={8}
       />
 
-      <Paper
-        elevation={selected ? 8 : 2}
-        sx={{
-          p: 2,
-          minWidth: 120,
-          border: selected ? '2px solid #ed6c02' : '1px solid #e0e0e0',
-          borderRadius: 2,
-          backgroundColor: data.isActive === false ? '#f5f5f5' : '#fff3e0',
-          cursor: 'pointer',
-          opacity: data.isActive === false ? 0.6 : 1,
-        }}
-      >
-        <Handle type="target" position={Position.Top} />
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-          <ConstraintIcon color="warning" fontSize="small" />
-          <Typography variant="subtitle2" fontWeight="bold">
-            {data.label}
-          </Typography>
-        </Box>
-        <Typography variant="caption" color="text.secondary">
-          {data.parameter || 'Constraint'}
-        </Typography>
-        <Handle type="source" position={Position.Bottom} />
-      </Paper>
-    </>
+      <Handle type="source" position={Position.Bottom} />
+      
+      <CreateNodeButton
+        variant="text"
+        onOpenPalette={data.onOpenPalette}
+        nodeId={data.label}
+        handle="bottom"
+      />
+    </Box>
   )
 }
 
