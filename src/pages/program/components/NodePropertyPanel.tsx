@@ -1,4 +1,4 @@
-import { Paper, Typography, Divider, IconButton, Box, Tooltip } from '@mui/material'
+import { Paper, Typography, Divider, IconButton, Box } from '@mui/material'
 import { Delete as DeleteIcon } from '@mui/icons-material'
 import type { Node } from '@xyflow/react'
 
@@ -43,15 +43,15 @@ export function NodePropertyPanel({ selectedNode, onDeleteNode }: NodePropertyPa
             <Typography variant="subtitle1" fontWeight="bold">
               {(selectedNode.data as any)?.label || 'Unknown'}
             </Typography>
-            <Tooltip title="Delete Node">
-              <IconButton 
-                size="small" 
-                color="error" 
-                onClick={onDeleteNode}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </Tooltip>
+            <IconButton 
+              size="small" 
+              color="error" 
+              onClick={onDeleteNode}
+              title="Delete Node"
+              aria-label="Delete selected node"
+            >
+              <DeleteIcon />
+            </IconButton>
           </Box>
           
           <Typography variant="body2" color="text.secondary" gutterBottom>

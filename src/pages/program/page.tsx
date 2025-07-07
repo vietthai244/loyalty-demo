@@ -26,13 +26,17 @@ import {
   type NodeType
 } from './components'
 
-// Node types configuration
-const nodeTypes: NodeTypes = {
-  operator: OperatorNode,
-  rule: RuleNode,
-  constraint: ConstraintNode,
-  distribution: DistributionNode,
-}
+// Node types configuration with handlers
+const createNodeTypes = (handlers: {
+  onDelete: (nodeId: string) => void
+  onEdit: (nodeId: string) => void
+  onToggleActive: (nodeId: string) => void
+}): NodeTypes => ({
+  operator: (props: any) => <OperatorNode {...props} {...handlers} />,
+  rule: (props: any) => <RuleNode {...props} {...handlers} />,
+  constraint: (props: any) => <ConstraintNode {...props} {...handlers} />,
+  distribution: (props: any) => <DistributionNode {...props} {...handlers} />,
+})
 
 function ProgramCanvas() {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([])
@@ -90,6 +94,7 @@ function ProgramCanvas() {
         position,
         data: { 
           label: type.charAt(0).toUpperCase() + type.slice(1),
+          isActive: true,
           ...(type === 'operator' && { operatorType: 'SUM' as const }),
           ...(type === 'constraint' && { parameter: 'tx_type' }),
           ...(type === 'distribution' && { distributionType: 'do_to_distribution' })
@@ -109,6 +114,35 @@ function ProgramCanvas() {
     }
   }, [selectedNode, setNodes, setEdges])
 
+  const deleteNode = useCallback((nodeId: string) => {
+    setNodes((nds) => nds.filter((node) => node.id !== nodeId))
+    setEdges((eds) => eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId))
+    if (selectedNode?.id === nodeId) {
+      setSelectedNode(null)
+    }
+  }, [setNodes, setEdges, selectedNode])
+
+  const editNode = useCallback((nodeId: string) => {
+    // TODO: Implement edit functionality
+    console.log('Edit node:', nodeId)
+  }, [])
+
+  const toggleNodeActive = useCallback((nodeId: string) => {
+    setNodes((nds) =>
+      nds.map((node) =>
+        node.id === nodeId
+          ? {
+              ...node,
+              data: {
+                ...node.data,
+                isActive: !(node.data as any).isActive,
+              },
+            }
+          : node
+      )
+    )
+  }, [setNodes])
+
   const onDragStart = (event: React.DragEvent, nodeType: NodeType) => {
     event.dataTransfer.setData('application/reactflow', nodeType)
     event.dataTransfer.effectAllowed = 'move'
@@ -124,17 +158,18 @@ function ProgramCanvas() {
       y: reactFlowBounds.height / 2 - 50,  // Offset by half node height
     }
 
-    const newNode: Node = {
-      id: `${nodeType}-${Date.now()}`,
-      type: nodeType,
-      position,
-      data: { 
-        label: nodeType.charAt(0).toUpperCase() + nodeType.slice(1),
-        ...(nodeType === 'operator' && { operatorType: 'SUM' as const }),
-        ...(nodeType === 'constraint' && { parameter: 'tx_type' }),
-        ...(nodeType === 'distribution' && { distributionType: 'do_to_distribution' })
-      },
-    }
+          const newNode: Node = {
+        id: `${nodeType}-${Date.now()}`,
+        type: nodeType,
+        position,
+        data: { 
+          label: nodeType.charAt(0).toUpperCase() + nodeType.slice(1),
+          isActive: true,
+          ...(nodeType === 'operator' && { operatorType: 'SUM' as const }),
+          ...(nodeType === 'constraint' && { parameter: 'tx_type' }),
+          ...(nodeType === 'distribution' && { distributionType: 'do_to_distribution' })
+        },
+      }
 
     setNodes((nds) => [...nds, newNode])
     setIsPaletteOpen(false) // Close the palette after adding node
@@ -162,7 +197,7 @@ function ProgramCanvas() {
           onPaneClick={onPaneClick}
           onDragOver={onDragOver}
           onDrop={onDrop}
-          nodeTypes={nodeTypes}
+          nodeTypes={createNodeTypes({ onDelete: deleteNode, onEdit: editNode, onToggleActive: toggleNodeActive })}
           fitView
           attributionPosition="bottom-left"
         >
