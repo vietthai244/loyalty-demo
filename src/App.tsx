@@ -20,7 +20,7 @@ import {
   CardGiftcard as ProgramIcon,
 } from "@mui/icons-material";
 import "./App.css";
-import Program from "./pages/Program";
+import Program from "./pages/program/page";
 
 const drawerWidth = 240;
 

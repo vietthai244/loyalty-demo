@@ -7,15 +7,11 @@ import {
   Controls, 
   Background, 
   MiniMap,
-  ReactFlowProvider,
-  useReactFlow,
-  Handle,
-  Position
+  ReactFlowProvider
 } from '@xyflow/react'
 import type { Node, Edge, Connection, NodeTypes } from '@xyflow/react'
 import { Box, Typography, Paper, Divider, IconButton, Tooltip } from '@mui/material'
 import {
-  Add as AddIcon,
   Functions as OperatorIcon,
   Rule as RuleIcon,
   FilterList as ConstraintIcon,
@@ -24,110 +20,16 @@ import {
 } from '@mui/icons-material'
 import '@xyflow/react/dist/style.css'
 
-// Custom Node Types
-const OperatorNode = ({ data, selected }: { data: any; selected: boolean }) => (
-  <Paper
-    elevation={selected ? 8 : 2}
-    sx={{
-      p: 2,
-      minWidth: 120,
-      border: selected ? '2px solid #1976d2' : '1px solid #e0e0e0',
-      borderRadius: 2,
-      backgroundColor: '#e3f2fd',
-      cursor: 'pointer',
-    }}
-  >
-    <Handle type="target" position={Position.Top} />
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-      <OperatorIcon color="primary" fontSize="small" />
-      <Typography variant="subtitle2" fontWeight="bold">
-        {data.label}
-      </Typography>
-    </Box>
-    <Typography variant="caption" color="text.secondary">
-      {data.operatorType || 'Operator'}
-    </Typography>
-    <Handle type="source" position={Position.Bottom} />
-  </Paper>
-)
+// Import node components and types
+import {
+  OperatorNode,
+  RuleNode,
+  ConstraintNode,
+  DistributionNode,
+  type ProgramNodeData
+} from './components'
 
-const RuleNode = ({ data, selected }: { data: any; selected: boolean }) => (
-  <Paper
-    elevation={selected ? 8 : 2}
-    sx={{
-      p: 2,
-      minWidth: 120,
-      border: selected ? '2px solid #2e7d32' : '1px solid #e0e0e0',
-      borderRadius: 2,
-      backgroundColor: '#e8f5e8',
-      cursor: 'pointer',
-    }}
-  >
-    <Handle type="target" position={Position.Top} />
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-      <RuleIcon color="success" fontSize="small" />
-      <Typography variant="subtitle2" fontWeight="bold">
-        {data.label}
-      </Typography>
-    </Box>
-    <Typography variant="caption" color="text.secondary">
-      Reward Rule
-    </Typography>
-    <Handle type="source" position={Position.Bottom} />
-  </Paper>
-)
-
-const ConstraintNode = ({ data, selected }: { data: any; selected: boolean }) => (
-  <Paper
-    elevation={selected ? 8 : 2}
-    sx={{
-      p: 2,
-      minWidth: 120,
-      border: selected ? '2px solid #ed6c02' : '1px solid #e0e0e0',
-      borderRadius: 2,
-      backgroundColor: '#fff3e0',
-      cursor: 'pointer',
-    }}
-  >
-    <Handle type="target" position={Position.Top} />
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-      <ConstraintIcon color="warning" fontSize="small" />
-      <Typography variant="subtitle2" fontWeight="bold">
-        {data.label}
-      </Typography>
-    </Box>
-    <Typography variant="caption" color="text.secondary">
-      {data.parameter || 'Constraint'}
-    </Typography>
-    <Handle type="source" position={Position.Bottom} />
-  </Paper>
-)
-
-const DistributionNode = ({ data, selected }: { data: any; selected: boolean }) => (
-  <Paper
-    elevation={selected ? 8 : 2}
-    sx={{
-      p: 2,
-      minWidth: 120,
-      border: selected ? '2px solid #9c27b0' : '1px solid #e0e0e0',
-      borderRadius: 2,
-      backgroundColor: '#f3e5f5',
-      cursor: 'pointer',
-    }}
-  >
-    <Handle type="target" position={Position.Top} />
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-      <DistributionIcon color="secondary" fontSize="small" />
-      <Typography variant="subtitle2" fontWeight="bold">
-        {data.label}
-      </Typography>
-    </Box>
-    <Typography variant="caption" color="text.secondary">
-      {data.distributionType || 'Distribution'}
-    </Typography>
-    <Handle type="source" position={Position.Bottom} />
-  </Paper>
-)
+// Node types configuration
 
 const nodeTypes: NodeTypes = {
   operator: OperatorNode,
@@ -162,14 +64,15 @@ const paletteItems = [
     icon: <DistributionIcon />,
     description: 'Configure point distribution'
   }
-]
+] as const
+
+type NodeType = typeof paletteItems[number]['type']
 
 function ProgramCanvas() {
   const [nodes, setNodes, onNodesChange] = useNodesState([])
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
   const [selectedNode, setSelectedNode] = useState<Node | null>(null)
   const reactFlowWrapper = useRef<HTMLDivElement>(null)
-  const { project } = useReactFlow()
 
   const onConnect = useCallback(
     (params: Connection) => {
@@ -206,13 +109,13 @@ function ProgramCanvas() {
       const reactFlowBounds = reactFlowWrapper.current?.getBoundingClientRect()
       if (!reactFlowBounds) return
 
-      const type = event.dataTransfer.getData('application/reactflow')
+      const type = event.dataTransfer.getData('application/reactflow') as NodeType
       if (!type) return
 
-      const position = project({
+      const position = {
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
-      })
+      }
 
       const newNode: Node = {
         id: `${type}-${Date.now()}`,
@@ -220,15 +123,15 @@ function ProgramCanvas() {
         position,
         data: { 
           label: type.charAt(0).toUpperCase() + type.slice(1),
-          operatorType: type === 'operator' ? 'SUM' : undefined,
-          parameter: type === 'constraint' ? 'tx_type' : undefined,
-          distributionType: type === 'distribution' ? 'do_to_distribution' : undefined
+          ...(type === 'operator' && { operatorType: 'SUM' as const }),
+          ...(type === 'constraint' && { parameter: 'tx_type' }),
+          ...(type === 'distribution' && { distributionType: 'do_to_distribution' })
         },
       }
 
-      setNodes((nds) => nds.concat(newNode))
+      setNodes((nds) => [...nds, newNode])
     },
-    [project, setNodes]
+    [setNodes]
   )
 
   const deleteSelectedNode = useCallback(() => {
@@ -239,9 +142,23 @@ function ProgramCanvas() {
     }
   }, [selectedNode, setNodes, setEdges])
 
-  const onDragStart = (event: React.DragEvent, nodeType: string) => {
+  const onDragStart = (event: React.DragEvent, nodeType: NodeType) => {
     event.dataTransfer.setData('application/reactflow', nodeType)
     event.dataTransfer.effectAllowed = 'move'
+  }
+
+  const getNodeDataDisplay = (node: Node) => {
+    const data = node.data as any
+    switch (node.type) {
+      case 'operator':
+        return `Operator: ${data.operatorType || 'Not set'}`
+      case 'constraint':
+        return `Parameter: ${data.parameter || 'Not set'}`
+      case 'distribution':
+        return `Distribution: ${data.distributionType || 'Not set'}`
+      default:
+        return `Type: ${node.type}`
+    }
   }
 
   return (
@@ -350,23 +267,9 @@ function ProgramCanvas() {
               Node Type: {selectedNode.type}
             </Typography>
             
-            {selectedNode.type === 'operator' && (
-              <Typography variant="body2" color="text.secondary">
-                Operator: {selectedNode.data.operatorType}
-              </Typography>
-            )}
-            
-            {selectedNode.type === 'constraint' && (
-              <Typography variant="body2" color="text.secondary">
-                Parameter: {selectedNode.data.parameter}
-              </Typography>
-            )}
-            
-            {selectedNode.type === 'distribution' && (
-              <Typography variant="body2" color="text.secondary">
-                Distribution: {selectedNode.data.distributionType}
-              </Typography>
-            )}
+            <Typography variant="body2" color="text.secondary">
+              {getNodeDataDisplay(selectedNode)}
+            </Typography>
           </Box>
         ) : (
           <Typography variant="body2" color="text.secondary">
