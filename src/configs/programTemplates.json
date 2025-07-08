@@ -225,64 +225,106 @@
       "name": "Advanced Program Example",
       "description": "A detailed loyalty program showcasing nested operators, diverse constraints, and multiple distribution types.",
       "category": "Loyalty",
-      "complexity": "advanced",
+      "complexity": "complex",
       "tags": ["nested", "operators", "multi-tier", "rewards", "transaction", "location", "time", "behavior"],
-      "nodes": [
+      "nodes":  [
         {
           "id": "root-op-sum",
           "type": "operator",
-          "position": { "x": 100, "y": 100 },
+          "position": {
+            "x": 112,
+            "y": 426
+          },
           "data": {
             "label": "Overall SUM",
             "isActive": true,
             "operatorType": "SUM"
-          }
+          },
+          "measured": {
+            "width": 155,
+            "height": 96
+          },
+          "selected": false,
+          "dragging": false
         },
         {
           "id": "op-max-tier",
           "type": "operator",
-          "position": { "x": 400, "y": 100 },
+          "position": {
+            "x": 390,
+            "y": 250
+          },
           "data": {
             "label": "Max Tier Logic",
             "isActive": true,
             "operatorType": "MAX"
-          }
+          },
+          "measured": {
+            "width": 178,
+            "height": 96
+          },
+          "selected": false,
+          "dragging": false
         },
         {
           "id": "op-share-branches",
           "type": "operator",
-          "position": { "x": 400, "y": 800 },
+          "position": {
+            "x": 400,
+            "y": 600
+          },
           "data": {
             "label": "Share Branches",
             "isActive": true,
             "operatorType": "SHARE"
+          },
+          "measured": {
+            "width": 190,
+            "height": 96
           }
         },
         {
           "id": "rr-1",
           "type": "rule",
-          "position": { "x": 700, "y": 50 },
+          "position": {
+            "x": 700,
+            "y": 100
+          },
           "data": {
             "label": "Reward Rule 1",
             "isActive": true
+          },
+          "measured": {
+            "width": 176,
+            "height": 96
           }
         },
         {
           "id": "con-rr1-tx-value",
           "type": "constraint",
-          "position": { "x": 1000, "y": 50 },
+          "position": {
+            "x": 1000,
+            "y": 100
+          },
           "data": {
             "label": "Tx Value >= 300K",
             "isActive": true,
-            "parameter": "tx_type",
+            "parameter": "value",
             "comparisonOperator": "GREATER_OR_EQUAL",
             "value": "300000"
+          },
+          "measured": {
+            "width": 202,
+            "height": 96
           }
         },
         {
           "id": "dist-rr1",
           "type": "distribution",
-          "position": { "x": 1300, "y": 50 },
+          "position": {
+            "x": 1300,
+            "y": 100
+          },
           "data": {
             "label": "Distribute Value * 1",
             "isActive": true,
@@ -290,33 +332,54 @@
             "pointMappingType": "VALUE_MULTIPLIER",
             "multiplier": 1,
             "baseValueField": "value"
+          },
+          "measured": {
+            "width": 220,
+            "height": 96
           }
         },
         {
           "id": "rr-2",
           "type": "rule",
-          "position": { "x": 700, "y": 200 },
+          "position": {
+            "x": 700,
+            "y": 250
+          },
           "data": {
             "label": "Reward Rule 2",
             "isActive": true
+          },
+          "measured": {
+            "width": 176,
+            "height": 96
           }
         },
         {
           "id": "con-rr2-value-1m",
           "type": "constraint",
-          "position": { "x": 1000, "y": 200 },
+          "position": {
+            "x": 1000,
+            "y": 250
+          },
           "data": {
             "label": "Value >= 1M",
             "isActive": true,
             "parameter": "value",
             "comparisonOperator": "GREATER_OR_EQUAL",
             "value": "1000000"
+          },
+          "measured": {
+            "width": 152,
+            "height": 96
           }
         },
         {
           "id": "dist-rr2",
           "type": "distribution",
-          "position": { "x": 1300, "y": 200 },
+          "position": {
+            "x": 1300,
+            "y": 250
+          },
           "data": {
             "label": "Distribute Value * 0.2",
             "isActive": true,
@@ -324,33 +387,54 @@
             "pointMappingType": "VALUE_MULTIPLIER",
             "multiplier": 0.2,
             "baseValueField": "value"
+          },
+          "measured": {
+            "width": 237,
+            "height": 96
           }
         },
         {
           "id": "rr-3",
           "type": "rule",
-          "position": { "x": 700, "y": 350 },
+          "position": {
+            "x": 700,
+            "y": 400
+          },
           "data": {
             "label": "Reward Rule 3",
             "isActive": true
+          },
+          "measured": {
+            "width": 176,
+            "height": 96
           }
         },
         {
           "id": "con-rr3-value-1-5m",
           "type": "constraint",
-          "position": { "x": 1000, "y": 350 },
+          "position": {
+            "x": 1000,
+            "y": 400
+          },
           "data": {
             "label": "Value >= 1.5M",
             "isActive": true,
             "parameter": "value",
             "comparisonOperator": "GREATER_OR_EQUAL",
             "value": "1500000"
+          },
+          "measured": {
+            "width": 169,
+            "height": 96
           }
         },
         {
           "id": "dist-rr3",
           "type": "distribution",
-          "position": { "x": 1300, "y": 350 },
+          "position": {
+            "x": 1300,
+            "y": 400
+          },
           "data": {
             "label": "Distribute Value * 0.4",
             "isActive": true,
@@ -358,210 +442,569 @@
             "pointMappingType": "VALUE_MULTIPLIER",
             "multiplier": 0.4,
             "baseValueField": "value"
+          },
+          "measured": {
+            "width": 237,
+            "height": 96
           }
         },
         {
           "id": "rr-4",
           "type": "rule",
-          "position": { "x": 700, "y": 500 },
+          "position": {
+            "x": 700,
+            "y": 700
+          },
           "data": {
             "label": "Reward Rule 4",
             "isActive": true
+          },
+          "measured": {
+            "width": 176,
+            "height": 96
           }
         },
         {
           "id": "op-rr4-and",
           "type": "operator",
-          "position": { "x": 1000, "y": 500 },
+          "position": {
+            "x": 1000,
+            "y": 700
+          },
           "data": {
             "label": "AND Logic for RR4",
             "isActive": true,
             "operatorType": "AND"
-          }
+          },
+          "measured": {
+            "width": 219,
+            "height": 96
+          },
+          "selected": false
         },
         {
           "id": "con-rr4-location",
           "type": "constraint",
-          "position": { "x": 1300, "y": 450 },
+          "position": {
+            "x": 1420.1123554029145,
+            "y": 586.9119017434762
+          },
           "data": {
             "label": "Location In HCM/HNI",
             "isActive": true,
             "parameter": "location",
             "comparisonOperator": "IN",
-            "value": ["HCM", "HNI"]
-          }
+            "value": [
+              "HCM",
+              "HNI"
+            ]
+          },
+          "measured": {
+            "width": 237,
+            "height": 96
+          },
+          "selected": false,
+          "dragging": false
         },
         {
           "id": "op-rr4-or-time",
           "type": "operator",
-          "position": { "x": 1300, "y": 600 },
+          "position": {
+            "x": 1302,
+            "y": 810.8663913084905
+          },
           "data": {
             "label": "Time OR Logic",
             "isActive": true,
             "operatorType": "OR"
-          }
+          },
+          "measured": {
+            "width": 179,
+            "height": 96
+          },
+          "selected": false,
+          "dragging": false
         },
         {
           "id": "con-rr4-time1",
           "type": "constraint",
-          "position": { "x": 1600, "y": 550 },
+          "position": {
+            "x": 1567.2819040608547,
+            "y": 863.6129036655277
+          },
           "data": {
             "label": "Time Between 10-12",
             "isActive": true,
             "parameter": "time",
             "comparisonOperator": "BETWEEN",
-            "value": ["10:00", "12:00"]
-          }
+            "value": [
+              "10:00",
+              "12:00"
+            ]
+          },
+          "measured": {
+            "width": 230,
+            "height": 96
+          },
+          "selected": false,
+          "dragging": false
         },
         {
           "id": "con-rr4-time2",
           "type": "constraint",
-          "position": { "x": 1600, "y": 700 },
+          "position": {
+            "x": 1565.7834021728775,
+            "y": 740.4562673973113
+          },
           "data": {
             "label": "Time Between 14-16",
             "isActive": true,
             "parameter": "time",
             "comparisonOperator": "BETWEEN",
-            "value": ["14:00", "16:00"]
-          }
+            "value": [
+              "14:00",
+              "16:00"
+            ]
+          },
+          "measured": {
+            "width": 230,
+            "height": 96
+          },
+          "selected": false,
+          "dragging": false
         },
         {
           "id": "dist-rr4",
           "type": "distribution",
-          "position": { "x": 1900, "y": 600 },
+          "position": {
+            "x": 2056.1881525103718,
+            "y": 710.9214869341511
+          },
           "data": {
             "label": "Distribute Campaign Ratio 1.5",
             "isActive": true,
             "distributionType": "do_campaign_distribution",
             "pointMappingType": "RATIO_MULTIPLIER",
             "ratio": 1.5
-          }
+          },
+          "measured": {
+            "width": 325,
+            "height": 96
+          },
+          "selected": false,
+          "dragging": false
         },
         {
           "id": "rr-5",
           "type": "rule",
-          "position": { "x": 700, "y": 950 },
+          "position": {
+            "x": 700,
+            "y": 1000
+          },
           "data": {
             "label": "Reward Rule 5",
             "isActive": true
+          },
+          "measured": {
+            "width": 176,
+            "height": 96
           }
         },
         {
           "id": "con-rr5-tx-groupbuy",
           "type": "constraint",
-          "position": { "x": 1000, "y": 950 },
+          "position": {
+            "x": 1000,
+            "y": 1000
+          },
           "data": {
             "label": "Tx Type Group Buy",
             "isActive": true,
             "parameter": "tx_type",
             "comparisonOperator": "EQUAL",
             "value": "group_buy"
+          },
+          "measured": {
+            "width": 222,
+            "height": 96
           }
         },
         {
           "id": "dist-rr5",
           "type": "distribution",
-          "position": { "x": 1300, "y": 950 },
+          "position": {
+            "x": 1300,
+            "y": 1000
+          },
           "data": {
             "label": "Distribute Event Ratio 1.1",
             "isActive": true,
             "distributionType": "do_event_distribution",
             "pointMappingType": "RATIO_MULTIPLIER",
             "ratio": 1.1
+          },
+          "measured": {
+            "width": 282,
+            "height": 96
           }
         },
         {
           "id": "rr-6",
           "type": "rule",
-          "position": { "x": 700, "y": 1100 },
+          "position": {
+            "x": 700,
+            "y": 1300
+          },
           "data": {
             "label": "Reward Rule 6",
             "isActive": true
+          },
+          "measured": {
+            "width": 176,
+            "height": 96
           }
         },
         {
           "id": "op-rr6-and",
           "type": "operator",
-          "position": { "x": 1000, "y": 1100 },
+          "position": {
+            "x": 1000,
+            "y": 1300
+          },
           "data": {
             "label": "AND Logic for RR6",
             "isActive": true,
             "operatorType": "AND"
+          },
+          "measured": {
+            "width": 219,
+            "height": 96
           }
         },
         {
           "id": "con-rr6-tx-groupbuy",
           "type": "constraint",
-          "position": { "x": 1300, "y": 1050 },
+          "position": {
+            "x": 1296.609728267581,
+            "y": 1210.0965744916057
+          },
           "data": {
             "label": "Tx Type Group Buy (RR6)",
             "isActive": true,
             "parameter": "tx_type",
             "comparisonOperator": "EQUAL",
             "value": "group_buy"
-          }
+          },
+          "measured": {
+            "width": 281,
+            "height": 96
+          },
+          "selected": true,
+          "dragging": false
         },
         {
           "id": "con-rr6-actor-creator",
           "type": "constraint",
-          "position": { "x": 1300, "y": 1200 },
+          "position": {
+            "x": 1300,
+            "y": 1388.5017577645792
+          },
           "data": {
             "label": "Actor Group Buy Creator",
             "isActive": true,
             "parameter": "actor",
             "comparisonOperator": "EQUAL",
             "value": "group_buy_creator"
-          }
+          },
+          "measured": {
+            "width": 277,
+            "height": 96
+          },
+          "selected": false,
+          "dragging": false
         },
         {
           "id": "dist-rr6",
           "type": "distribution",
-          "position": { "x": 1600, "y": 1100 },
+          "position": {
+            "x": 1684.7567933104763,
+            "y": 1288.1340489365334
+          },
           "data": {
             "label": "Distribute Behavior Ratio 0.2",
             "isActive": true,
             "distributionType": "do_behavior_distribution",
             "pointMappingType": "RATIO_MULTIPLIER",
             "ratio": 0.2
-          }
+          },
+          "measured": {
+            "width": 314,
+            "height": 96
+          },
+          "selected": false,
+          "dragging": false
         }
       ],
       "edges": [
-        { "id": "e-root-sum-to-max", "source": "root-op-sum", "target": "op-max-tier", "sourceHandle": "right", "targetHandle": "left" },
-        { "id": "e-root-sum-to-share", "source": "root-op-sum", "target": "op-share-branches", "sourceHandle": "right", "targetHandle": "left" },
-
-        { "id": "e-max-to-rr1", "source": "op-max-tier", "target": "rr-1", "sourceHandle": "right", "targetHandle": "left" },
-        { "id": "e-max-to-rr2", "source": "op-max-tier", "target": "rr-2", "sourceHandle": "right", "targetHandle": "left" },
-        { "id": "e-max-to-rr3", "source": "op-max-tier", "target": "rr-3", "sourceHandle": "right", "targetHandle": "left" },
-
-        { "id": "e-rr1-to-con", "source": "rr-1", "target": "con-rr1-tx-value", "sourceHandle": "right", "targetHandle": "left" },
-        { "id": "e-con-rr1-to-dist", "source": "con-rr1-tx-value", "target": "dist-rr1", "sourceHandle": "right", "targetHandle": "left" },
-
-        { "id": "e-rr2-to-con", "source": "rr-2", "target": "con-rr2-value-1m", "sourceHandle": "right", "targetHandle": "left" },
-        { "id": "e-con-rr2-to-dist", "source": "con-rr2-value-1m", "target": "dist-rr2", "sourceHandle": "right", "targetHandle": "left" },
-
-        { "id": "e-rr3-to-con", "source": "rr-3", "target": "con-rr3-value-1-5m", "sourceHandle": "right", "targetHandle": "left" },
-        { "id": "e-con-rr3-to-dist", "source": "con-rr3-value-1-5m", "target": "dist-rr3", "sourceHandle": "right", "targetHandle": "left" },
-
-        { "id": "e-share-to-rr4", "source": "op-share-branches", "target": "rr-4", "sourceHandle": "right", "targetHandle": "left" },
-        { "id": "e-share-to-rr5", "source": "op-share-branches", "target": "rr-5", "sourceHandle": "right", "targetHandle": "left" },
-        { "id": "e-share-to-rr6", "source": "op-share-branches", "target": "rr-6", "sourceHandle": "right", "targetHandle": "left" },
-
-        { "id": "e-rr4-to-op-and", "source": "rr-4", "target": "op-rr4-and", "sourceHandle": "right", "targetHandle": "left" },
-        { "id": "e-op-rr4-and-to-con-loc", "source": "op-rr4-and", "target": "con-rr4-location", "sourceHandle": "right", "targetHandle": "left" },
-        { "id": "e-op-rr4-and-to-op-or", "source": "op-rr4-and", "target": "op-rr4-or-time", "sourceHandle": "right", "targetHandle": "left" },
-        { "id": "e-op-rr4-or-to-con-time1", "source": "op-rr4-or-time", "target": "con-rr4-time1", "sourceHandle": "right", "targetHandle": "left" },
-        { "id": "e-op-rr4-or-to-con-time2", "source": "op-rr4-or-time", "target": "con-rr4-time2", "sourceHandle": "right", "targetHandle": "left" },
-        { "id": "e-op-rr4-and-to-dist", "source": "op-rr4-and", "target": "dist-rr4", "sourceHandle": "right", "targetHandle": "left" },
-
-
-        { "id": "e-rr5-to-con", "source": "rr-5", "target": "con-rr5-tx-groupbuy", "sourceHandle": "right", "targetHandle": "left" },
-        { "id": "e-con-rr5-to-dist", "source": "con-rr5-tx-groupbuy", "target": "dist-rr5", "sourceHandle": "right", "targetHandle": "left" },
-
-        { "id": "e-rr6-to-op-and", "source": "rr-6", "target": "op-rr6-and", "sourceHandle": "right", "targetHandle": "left" },
-        { "id": "e-op-rr6-and-to-con-tx", "source": "op-rr6-and", "target": "con-rr6-tx-groupbuy", "sourceHandle": "right", "targetHandle": "left" },
-        { "id": "e-op-rr6-and-to-con-actor", "source": "op-rr6-and", "target": "con-rr6-actor-creator", "sourceHandle": "right", "targetHandle": "left" },
-        { "id": "e-op-rr6-and-to-dist", "source": "op-rr6-and", "target": "dist-rr6", "sourceHandle": "right", "targetHandle": "left" }
+        {
+          "id": "e-root-sum-to-max",
+          "source": "root-op-sum",
+          "target": "op-max-tier",
+          "sourceHandle": "bottom",
+          "targetHandle": "top"
+        },
+        {
+          "id": "e-root-sum-to-share",
+          "source": "root-op-sum",
+          "target": "op-share-branches",
+          "sourceHandle": "bottom",
+          "targetHandle": "top"
+        },
+        {
+          "id": "e-max-to-rr1",
+          "source": "op-max-tier",
+          "target": "rr-1",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "e-max-to-rr2",
+          "source": "op-max-tier",
+          "target": "rr-2",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "e-max-to-rr3",
+          "source": "op-max-tier",
+          "target": "rr-3",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "e-rr1-to-con",
+          "source": "rr-1",
+          "target": "con-rr1-tx-value",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "e-con-rr1-to-dist",
+          "source": "con-rr1-tx-value",
+          "target": "dist-rr1",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "e-rr2-to-con",
+          "source": "rr-2",
+          "target": "con-rr2-value-1m",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "e-con-rr2-to-dist",
+          "source": "con-rr2-value-1m",
+          "target": "dist-rr2",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "e-rr3-to-con",
+          "source": "rr-3",
+          "target": "con-rr3-value-1-5m",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "e-con-rr3-to-dist",
+          "source": "con-rr3-value-1-5m",
+          "target": "dist-rr3",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "e-share-to-rr4",
+          "source": "op-share-branches",
+          "target": "rr-4",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "e-share-to-rr5",
+          "source": "op-share-branches",
+          "target": "rr-5",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "e-share-to-rr6",
+          "source": "op-share-branches",
+          "target": "rr-6",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "e-rr4-to-op-and",
+          "source": "rr-4",
+          "target": "op-rr4-and",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "e-op-rr4-and-to-con-loc",
+          "source": "op-rr4-and",
+          "target": "con-rr4-location",
+          "sourceHandle": "bottom",
+          "targetHandle": "top"
+        },
+        {
+          "id": "e-op-rr4-and-to-op-or",
+          "source": "op-rr4-and",
+          "target": "op-rr4-or-time",
+          "sourceHandle": "bottom",
+          "targetHandle": "top"
+        },
+        {
+          "id": "e-op-rr4-or-to-con-time1",
+          "source": "op-rr4-or-time",
+          "target": "con-rr4-time1",
+          "sourceHandle": "bottom",
+          "targetHandle": "top"
+        },
+        {
+          "id": "e-op-rr4-or-to-con-time2",
+          "source": "op-rr4-or-time",
+          "target": "con-rr4-time2",
+          "sourceHandle": "bottom",
+          "targetHandle": "top"
+        },
+        {
+          "id": "e-rr5-to-con",
+          "source": "rr-5",
+          "target": "con-rr5-tx-groupbuy",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "e-con-rr5-to-dist",
+          "source": "con-rr5-tx-groupbuy",
+          "target": "dist-rr5",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "e-rr6-to-op-and",
+          "source": "rr-6",
+          "target": "op-rr6-and",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "e-op-rr6-and-to-con-tx",
+          "source": "op-rr6-and",
+          "target": "con-rr6-tx-groupbuy",
+          "sourceHandle": "bottom",
+          "targetHandle": "top"
+        },
+        {
+          "id": "e-op-rr6-and-to-con-actor",
+          "source": "op-rr6-and",
+          "target": "con-rr6-actor-creator",
+          "sourceHandle": "bottom",
+          "targetHandle": "top"
+        },
+        {
+          "source": "root-op-sum",
+          "sourceHandle": "right",
+          "target": "op-max-tier",
+          "targetHandle": "left",
+          "id": "xy-edge__root-op-sumright-op-max-tierleft"
+        },
+        {
+          "source": "root-op-sum",
+          "sourceHandle": "right",
+          "target": "op-share-branches",
+          "targetHandle": "left",
+          "id": "xy-edge__root-op-sumright-op-share-branchesleft"
+        },
+        {
+          "source": "op-rr4-and",
+          "sourceHandle": "right",
+          "target": "op-rr4-or-time",
+          "targetHandle": "left",
+          "id": "xy-edge__op-rr4-andright-op-rr4-or-timeleft"
+        },
+        {
+          "source": "op-rr4-or-time",
+          "sourceHandle": "right",
+          "target": "con-rr4-time2",
+          "targetHandle": "left",
+          "id": "xy-edge__op-rr4-or-timeright-con-rr4-time2left"
+        },
+        {
+          "source": "op-rr4-or-time",
+          "sourceHandle": "right",
+          "target": "con-rr4-time1",
+          "targetHandle": "left",
+          "id": "xy-edge__op-rr4-or-timeright-con-rr4-time1left"
+        },
+        {
+          "source": "op-rr4-and",
+          "sourceHandle": "right",
+          "target": "con-rr4-location",
+          "targetHandle": "left",
+          "id": "xy-edge__op-rr4-andright-con-rr4-locationleft"
+        },
+        {
+          "source": "con-rr4-location",
+          "sourceHandle": "right",
+          "target": "dist-rr4",
+          "targetHandle": "left",
+          "id": "xy-edge__con-rr4-locationright-dist-rr4left"
+        },
+        {
+          "source": "con-rr4-time2",
+          "sourceHandle": "right",
+          "target": "dist-rr4",
+          "targetHandle": "left",
+          "id": "xy-edge__con-rr4-time2right-dist-rr4left"
+        },
+        {
+          "source": "con-rr4-time1",
+          "sourceHandle": "right",
+          "target": "dist-rr4",
+          "targetHandle": "left",
+          "id": "xy-edge__con-rr4-time1right-dist-rr4left"
+        },
+        {
+          "source": "op-rr6-and",
+          "sourceHandle": "right",
+          "target": "con-rr6-tx-groupbuy",
+          "targetHandle": "left",
+          "id": "xy-edge__op-rr6-andright-con-rr6-tx-groupbuyleft"
+        },
+        {
+          "source": "op-rr6-and",
+          "sourceHandle": "right",
+          "target": "con-rr6-actor-creator",
+          "targetHandle": "left",
+          "id": "xy-edge__op-rr6-andright-con-rr6-actor-creatorleft"
+        },
+        {
+          "source": "con-rr6-tx-groupbuy",
+          "sourceHandle": "right",
+          "target": "dist-rr6",
+          "targetHandle": "left",
+          "id": "xy-edge__con-rr6-tx-groupbuyright-dist-rr6left"
+        },
+        {
+          "source": "con-rr6-actor-creator",
+          "sourceHandle": "right",
+          "target": "dist-rr6",
+          "targetHandle": "left",
+          "id": "xy-edge__con-rr6-actor-creatorright-dist-rr6left"
+        }
       ]
     }
   ]

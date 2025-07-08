@@ -64,9 +64,13 @@ export function DryTestModal({ open, onClose, program }: DryTestModalProps) {
         const programFormat = convertToProgramFormat(program)
         const results = dryTestProgram(programFormat, eventData)
         setTestResults(results)
+        // Switch to Results tab after test completion
+        setActiveTab(1)
       } catch (error) {
         console.error('Test execution error:', error)
         setTestResults(null)
+        // Switch to Results tab even if there's an error to show the error state
+        setActiveTab(1)
       } finally {
         setIsLoading(false)
       }

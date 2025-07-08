@@ -7,15 +7,21 @@ import type { ProgramNode } from '../programEvaluator'
  * @returns boolean indicating if the rule is activated
  */
 export function evaluateRule(node: ProgramNode, dependencyResults: any[]): boolean {
+  console.log(`📋 Evaluating rule: ${node.id}`)
+  console.log(`📋 Rule data:`, node.data)
+  console.log(`📥 Dependency results:`, dependencyResults)
+  
   const { data } = node;
   
   // Check if node is active
   if (!data.isActive) {
+    console.log(`❌ Rule ${node.id} is not active`)
     return false;
   }
 
   // Validate required fields
   if (!data.ruleType) {
+    console.log(`❌ Rule ${node.id} missing ruleType`)
     return false;
   }
 
@@ -23,21 +29,34 @@ export function evaluateRule(node: ProgramNode, dependencyResults: any[]): boole
   const validResults = dependencyResults.filter(result => 
     result !== null && result !== undefined
   );
+  
+  console.log(`✅ Valid dependency results:`, validResults)
 
   // Evaluate rule based on type
+  let result = false;
   switch (data.ruleType) {
     case 'CONDITIONAL':
-      return evaluateConditionalRule(validResults);
+      result = evaluateConditionalRule(validResults);
+      console.log(`📋 CONDITIONAL rule result: ${result}`)
+      break;
 
     case 'THRESHOLD':
-      return evaluateThresholdRule(validResults, data);
+      result = evaluateThresholdRule(validResults, data);
+      console.log(`📋 THRESHOLD rule result: ${result}`)
+      break;
 
     case 'SEQUENTIAL':
-      return evaluateSequentialRule(validResults);
+      result = evaluateSequentialRule(validResults);
+      console.log(`📋 SEQUENTIAL rule result: ${result}`)
+      break;
 
     default:
-      return false;
+      console.log(`❌ Unknown rule type: ${data.ruleType}`)
+      result = false;
   }
+
+  console.log(`✅ Rule ${node.id} final result: ${result}`)
+  return result;
 }
 
 /**

@@ -70,12 +70,20 @@ export function EventDataInput({
   const getFieldType = (field: string): 'text' | 'number' | 'select' => {
     // Determine field type based on common patterns
     if (field === 'value' || field === 'totalSpent') return 'number'
-    if (field === 'location') return 'select'
+    if (field === 'location' || field === 'tx_type' || field === 'actor') return 'select'
     return 'text'
   }
 
   const getLocationOptions = () => [
     'HCM', 'HNI', 'DANANG', 'CANTHO', 'HAIPHONG', 'OTHER'
+  ]
+
+  const getTxTypeOptions = () => [
+    'purchase', 'refund', 'exchange', 'group_buy', 'campaign', 'event', 'other'
+  ]
+
+  const getActorOptions = () => [
+    'customer', 'merchant', 'group_buy_creator', 'campaign_manager', 'event_organizer', 'other'
   ]
 
   const renderField = (field: string) => {
@@ -109,6 +117,42 @@ export function EventDataInput({
                 {getLocationOptions().map(option => (
                   <MenuItem key={option} value={option}>
                     {option}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )
+        }
+        if (field === 'tx_type') {
+          return (
+            <FormControl key={field} fullWidth size="small">
+              <InputLabel>Transaction Type</InputLabel>
+              <Select
+                value={value}
+                label="Transaction Type"
+                onChange={(e) => handleFieldChange(field, e.target.value)}
+              >
+                {getTxTypeOptions().map(option => (
+                  <MenuItem key={option} value={option}>
+                    {option.replace('_', ' ').toUpperCase()}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )
+        }
+        if (field === 'actor') {
+          return (
+            <FormControl key={field} fullWidth size="small">
+              <InputLabel>Actor</InputLabel>
+              <Select
+                value={value}
+                label="Actor"
+                onChange={(e) => handleFieldChange(field, e.target.value)}
+              >
+                {getActorOptions().map(option => (
+                  <MenuItem key={option} value={option}>
+                    {option.replace(/_/g, ' ').toUpperCase()}
                   </MenuItem>
                 ))}
               </Select>
@@ -183,7 +227,14 @@ export function EventDataInput({
           </Box>
 
           <Stack spacing={2}>
-            {requiredFields.map(field => renderField(field))}
+            {/* Prioritize tx_type at the top */}
+            {requiredFields.includes('tx_type') && renderField('tx_type')}
+            
+            {/* Render other fields */}
+            {requiredFields
+              .filter(field => field !== 'tx_type')
+              .map(field => renderField(field))
+            }
           </Stack>
         </Stack>
       )}

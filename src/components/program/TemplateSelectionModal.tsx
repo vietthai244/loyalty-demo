@@ -42,6 +42,14 @@ interface TemplateSelectionModalProps {
 // Import templates from JSON config
 const PREDEFINED_TEMPLATES: ProgramTemplate[] = programTemplates.templates as ProgramTemplate[]
 
+// Debug logging
+console.log('📋 Loaded templates:', PREDEFINED_TEMPLATES.map(t => ({
+  id: t.id,
+  name: t.name,
+  nodes: t.nodes.length,
+  edges: t.edges.length
+})))
+
 export function TemplateSelectionModal({
   open,
   onClose,

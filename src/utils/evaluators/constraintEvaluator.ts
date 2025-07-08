@@ -7,56 +7,94 @@ import type { ProgramNode, EventData } from '../programEvaluator'
  * @returns boolean indicating if the constraint is satisfied
  */
 export function evaluateConstraint(node: ProgramNode, eventData: EventData): boolean {
+  console.log(`🔒 Evaluating constraint: ${node.id}`)
+  console.log(`📋 Constraint data:`, node.data)
+  console.log(`📝 Event data:`, eventData)
+  
   const { data } = node;
   
   // Check if node is active
   if (!data.isActive) {
+    console.log(`❌ Constraint ${node.id} is not active`)
     return false;
   }
 
   // Validate required fields
   if (!data.parameter || !data.comparisonOperator || data.value === undefined) {
+    console.log(`❌ Constraint ${node.id} missing required fields:`, {
+      parameter: data.parameter,
+      comparisonOperator: data.comparisonOperator,
+      value: data.value
+    })
     return false;
   }
 
   // Get the parameter value from event data
   const parameterValue = eventData[data.parameter];
+  console.log(`🔍 Parameter "${data.parameter}" value:`, parameterValue)
+  
   if (parameterValue === undefined) {
+    console.log(`❌ Parameter "${data.parameter}" not found in event data`)
     return false;
   }
 
   // Convert values to appropriate types for comparison
   const eventValue = convertToNumber(parameterValue);
   const constraintValue = convertToNumber(data.value);
+  
+  console.log(`🔄 Comparison values:`, {
+    eventValue,
+    constraintValue,
+    operator: data.comparisonOperator
+  })
 
   // Perform comparison based on operator
+  let result = false;
   switch (data.comparisonOperator) {
     case 'GREATER_OR_EQUAL':
-      return eventValue >= constraintValue;
+      result = eventValue >= constraintValue;
+      console.log(`🔢 GREATER_OR_EQUAL: ${eventValue} >= ${constraintValue} = ${result}`)
+      break;
 
     case 'EQUAL':
       if (Array.isArray(data.value)) {
-        return data.value.includes(parameterValue);
+        result = data.value.includes(parameterValue);
+        console.log(`🔢 EQUAL (array): ${parameterValue} in ${data.value} = ${result}`)
+      } else {
+        result = eventValue === constraintValue;
+        console.log(`🔢 EQUAL: ${eventValue} === ${constraintValue} = ${result}`)
       }
-      return eventValue === constraintValue;
+      break;
 
     case 'BETWEEN':
       if (Array.isArray(data.value) && data.value.length >= 2) {
         const min = convertToNumber(data.value[0]);
         const max = convertToNumber(data.value[1]);
-        return eventValue >= min && eventValue <= max;
+        result = eventValue >= min && eventValue <= max;
+        console.log(`🔢 BETWEEN: ${eventValue} between ${min} and ${max} = ${result}`)
+      } else {
+        console.log(`❌ BETWEEN operator requires array with 2 values`)
+        result = false;
       }
-      return false;
+      break;
 
     case 'IN':
       if (Array.isArray(data.value)) {
-        return data.value.includes(parameterValue);
+        result = data.value.includes(parameterValue);
+        console.log(`🔢 IN: ${parameterValue} in ${data.value} = ${result}`)
+      } else {
+        console.log(`❌ IN operator requires array value`)
+        result = false;
       }
-      return false;
+      break;
 
     default:
-      return false;
+      console.log(`❌ Unknown comparison operator: ${data.comparisonOperator}`)
+      result = false;
   }
+
+  console.log(`✅ Constraint ${node.id} result: ${result}`)
+  return result;
 }
 
 /**

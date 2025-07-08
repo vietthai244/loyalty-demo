@@ -12,10 +12,16 @@ export function evaluateDistribution(
   dependencyResults: any[], 
   eventData: EventData
 ): number {
+  console.log(`🎁 Evaluating distribution: ${node.id}`)
+  console.log(`📋 Distribution data:`, node.data)
+  console.log(`📥 Dependency results:`, dependencyResults)
+  console.log(`📝 Event data:`, eventData)
+  
   const { data } = node;
   
   // Check if node is active
   if (!data.isActive) {
+    console.log(`❌ Distribution ${node.id} is not active`)
     return 0;
   }
 
@@ -27,29 +33,44 @@ export function evaluateDistribution(
     return Boolean(result);
   });
 
+  console.log(`🔍 Distribution activation check: ${isActivated}`)
+
   if (!isActivated) {
+    console.log(`❌ Distribution ${node.id} not activated - no true dependencies`)
     return 0;
   }
 
   // Validate required fields
   if (!data.pointMappingType) {
+    console.log(`❌ Distribution ${node.id} missing pointMappingType`)
     return 0;
   }
 
   // Calculate distribution based on mapping type
+  let result = 0;
   switch (data.pointMappingType) {
     case 'VALUE_MULTIPLIER':
-      return calculateValueMultiplier(data, eventData);
+      result = calculateValueMultiplier(data, eventData);
+      console.log(`💰 VALUE_MULTIPLIER result: ${result}`)
+      break;
 
     case 'RATIO_MULTIPLIER':
-      return calculateRatioMultiplier(data, eventData);
+      result = calculateRatioMultiplier(data, eventData);
+      console.log(`💰 RATIO_MULTIPLIER result: ${result}`)
+      break;
 
     case 'FIXED_AMOUNT':
-      return calculateFixedAmount(data);
+      result = calculateFixedAmount(data);
+      console.log(`💰 FIXED_AMOUNT result: ${result}`)
+      break;
 
     default:
-      return 0;
+      console.log(`❌ Unknown point mapping type: ${data.pointMappingType}`)
+      result = 0;
   }
+
+  console.log(`✅ Distribution ${node.id} final result: ${result}`)
+  return result;
 }
 
 /**
@@ -59,6 +80,13 @@ export function evaluateDistribution(
 function calculateValueMultiplier(data: any, eventData: EventData): number {
   const multiplier = data.multiplier || 0;
   const baseValue = getBaseValue(data.baseValueField, eventData);
+  
+  console.log(`💰 VALUE_MULTIPLIER calculation:`, {
+    multiplier,
+    baseValueField: data.baseValueField,
+    baseValue,
+    result: baseValue * multiplier
+  })
   
   return baseValue * multiplier;
 }
@@ -71,6 +99,13 @@ function calculateRatioMultiplier(data: any, eventData: EventData): number {
   const ratio = data.ratio || 0;
   const baseValue = getBaseValue(data.baseValueField, eventData);
   
+  console.log(`💰 RATIO_MULTIPLIER calculation:`, {
+    ratio,
+    baseValueField: data.baseValueField,
+    baseValue,
+    result: baseValue * ratio
+  })
+  
   return baseValue * ratio;
 }
 
@@ -79,7 +114,14 @@ function calculateRatioMultiplier(data: any, eventData: EventData): number {
  * Returns the fixed amount regardless of base value.
  */
 function calculateFixedAmount(data: any): number {
-  return data.fixedAmount || 0;
+  const fixedAmount = data.fixedAmount || 0;
+  
+  console.log(`💰 FIXED_AMOUNT calculation:`, {
+    fixedAmount,
+    result: fixedAmount
+  })
+  
+  return fixedAmount;
 }
 
 /**
@@ -89,16 +131,25 @@ function calculateFixedAmount(data: any): number {
  * @returns The base value as a number
  */
 function getBaseValue(baseValueField: string | undefined, eventData: EventData): number {
+  console.log(`🔍 Getting base value for field: "${baseValueField}"`)
+  
   if (!baseValueField) {
+    console.log(`❌ No base value field specified`)
     return 0;
   }
 
   const value = eventData[baseValueField];
+  console.log(`🔍 Raw value from event data:`, value)
+  
   if (value === undefined) {
+    console.log(`❌ Field "${baseValueField}" not found in event data`)
     return 0;
   }
 
-  return convertToNumber(value);
+  const convertedValue = convertToNumber(value);
+  console.log(`🔍 Converted base value: ${convertedValue}`)
+  
+  return convertedValue;
 }
 
 /**

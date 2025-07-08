@@ -158,6 +158,14 @@ export default function ProgramCanvas({ mode }: ProgramCanvasProps) {
   }, [isCreateMode, currentProgram, isTemplateModalOpen])
 
   const handleTemplateSelect = (template: ProgramTemplate) => {
+    console.log('📋 Selected template:', {
+      id: template.id,
+      name: template.name,
+      nodes: template.nodes.length,
+      edges: template.edges.length
+    })
+    console.log('🔗 Template edges:', template.edges)
+    
     // Create new program from template
     const newProgram = {
       id: 'temp-create',
