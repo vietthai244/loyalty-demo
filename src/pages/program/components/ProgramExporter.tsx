@@ -7,7 +7,6 @@ import {
   DialogActions, 
   Typography, 
   Box, 
-  TextField,
   FormControlLabel,
   Checkbox,
   Alert,
@@ -15,8 +14,7 @@ import {
 } from '@mui/material'
 import { 
   FileDownload as ExportIcon, 
-  FileUpload as ImportIcon,
-  Settings as SettingsIcon
+  FileUpload as ImportIcon
 } from '@mui/icons-material'
 import type { Node, Edge } from '@xyflow/react'
 
@@ -129,26 +127,7 @@ export function ProgramExporter({ program, onImport, disabled = false }: Program
     reader.readAsText(file)
   }
 
-  const validateProgramFile = (file: File): Promise<boolean> => {
-    return new Promise((resolve) => {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        try {
-          const content = e.target?.result as string
-          const program = JSON.parse(content)
-          
-          const isValid = program.name && 
-                         Array.isArray(program.nodes) && 
-                         Array.isArray(program.edges)
-          
-          resolve(isValid)
-        } catch {
-          resolve(false)
-        }
-      }
-      reader.readAsText(file)
-    })
-  }
+
 
   return (
     <>

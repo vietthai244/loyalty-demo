@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect, useMemo, createContext, useContext } from 'react'
+import { useState, useCallback, useRef, useEffect, createContext, useContext } from 'react'
 import { 
   ReactFlow, 
   addEdge, 
@@ -26,8 +26,7 @@ import {
 } from '@mui/material'
 import { 
   Save as SaveIcon, 
-  ArrowBack as BackIcon,
-  BugReport as ValidationIcon
+  ArrowBack as BackIcon
 } from '@mui/icons-material'
 import { TemplateSelectionModal, type ProgramTemplate } from './components/TemplateSelectionModal'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
@@ -42,7 +41,6 @@ import {
   CreateNodeButton,
   NodePalette,
   NodePropertyPanel,
-  ProgramValidator,
   ProgramExporter,
   type NodeType,
   type PanelMode
@@ -338,20 +336,16 @@ function ProgramCanvasEditor() {
 
   const onConnect = useCallback(
     (params: Connection) => {
-      // Basic connection validation
-      const sourceNode = nodes.find(node => node.id === params.source)
-      const targetNode = nodes.find(node => node.id === params.target)
-      
       // Prevent self-connections
       if (params.source === params.target) return
       
       // Add more validation rules here as needed
       setEdges((eds) => addEdge(params, eds))
     },
-    [setEdges, nodes]
+    [setEdges]
   )
 
-  const onNodeClick = useCallback((event: any, node: Node) => {
+  const onNodeClick = useCallback((_event: any, node: Node) => {
     setSelectedNode(node)
   }, [])
 

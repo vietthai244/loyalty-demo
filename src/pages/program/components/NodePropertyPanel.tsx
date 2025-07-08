@@ -68,19 +68,7 @@ export function NodePropertyPanel({
     onClose()
   }
 
-  const getNodeDataDisplay = (node: Node) => {
-    const data = node.data as any
-    switch (node.type) {
-      case 'operator':
-        return `Operator: ${data.operatorType || 'Not set'}`
-      case 'constraint':
-        return `Parameter: ${data.parameter || 'Not set'}`
-      case 'distribution':
-        return `Distribution: ${data.distributionType || 'Not set'}`
-      default:
-        return `Type: ${node.type}`
-    }
-  }
+
 
   const renderCreationForm = () => (
     <Box>
@@ -109,8 +97,6 @@ export function NodePropertyPanel({
 
   const renderEditForm = () => {
     if (!selectedNode) return null
-
-    const data = selectedNode.data as any
     
     return (
       <Box>

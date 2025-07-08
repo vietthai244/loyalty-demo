@@ -28,7 +28,6 @@ export interface NodeToolbarProps {
 
 export function NodeToolbar({ 
   isVisible, 
-  nodeId, 
   actions, 
   position = Position.Top, 
   offset = 8 

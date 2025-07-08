@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import {
-  AppBar,
   Box,
   CssBaseline,
   Drawer,
