@@ -19,8 +19,10 @@ import {
   CardGiftcard as ProgramIcon,
 } from "@mui/icons-material";
 import "./App.css";
-import ProgramDashboard from "./pages/program/page";
-import ProgramCanvas from "./pages/program/ProgramCanvas";
+import HomePage from "./pages/home";
+import ProgramsPage from "./pages/programs";
+import CreateProgramPage from "./pages/programs/create";
+import EditProgramPage from "./pages/programs/edit";
 
 const drawerWidth = 240;
 
@@ -163,10 +165,10 @@ function App() {
           }}
         >
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/program" element={<ProgramDashboard />} />
-            <Route path="/program/create" element={<ProgramCanvas />} />
-            <Route path="/program/edit/:id" element={<ProgramCanvas />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/program" element={<ProgramsPage />} />
+            <Route path="/program/create" element={<CreateProgramPage />} />
+            <Route path="/program/edit/:id" element={<EditProgramPage />} />
           </Routes>
         </Box>
       </Box>
@@ -174,17 +176,6 @@ function App() {
   );
 }
 
-function Home() {
-  return (
-    <div>
-      <Typography variant="h4" gutterBottom>
-        Home
-      </Typography>
-      <Typography variant="body1">
-        Welcome to the SSI Loyalty application!
-      </Typography>
-    </div>
-  );
-}
+
 
 export default App;
