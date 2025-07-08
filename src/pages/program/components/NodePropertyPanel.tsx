@@ -154,25 +154,110 @@ export function NodePropertyPanel({
         )}
 
         {selectedNode.type === 'constraint' && (
-          <TextField
-            fullWidth
-            label="Parameter"
-            value={formData.parameter || ''}
-            onChange={(e) => handleInputChange('parameter', e.target.value)}
-            margin="normal"
-            size="small"
-          />
+          <>
+            <FormControl fullWidth margin="normal" size="small">
+              <InputLabel>Parameter</InputLabel>
+              <Select
+                value={formData.parameter || 'tx_type'}
+                onChange={(e) => handleInputChange('parameter', e.target.value)}
+                label="Parameter"
+              >
+                <MenuItem value="tx_type">Transaction Type</MenuItem>
+                <MenuItem value="value">Value</MenuItem>
+                <MenuItem value="location">Location</MenuItem>
+                <MenuItem value="time">Time</MenuItem>
+                <MenuItem value="actor">Actor</MenuItem>
+              </Select>
+            </FormControl>
+
+            <FormControl fullWidth margin="normal" size="small">
+              <InputLabel>Comparison Operator</InputLabel>
+              <Select
+                value={formData.comparisonOperator || 'EQUAL'}
+                onChange={(e) => handleInputChange('comparisonOperator', e.target.value)}
+                label="Comparison Operator"
+              >
+                <MenuItem value="EQUAL">Equal (=)</MenuItem>
+                <MenuItem value="NOT_EQUAL">Not Equal (≠)</MenuItem>
+                <MenuItem value="GREATER_THAN">Greater Than (&gt;)</MenuItem>
+                <MenuItem value="GREATER_OR_EQUAL">Greater or Equal (≥)</MenuItem>
+                <MenuItem value="LESS_THAN">Less Than (&lt;)</MenuItem>
+                <MenuItem value="LESS_OR_EQUAL">Less or Equal (≤)</MenuItem>
+                <MenuItem value="BETWEEN">Between</MenuItem>
+                <MenuItem value="IN">In List</MenuItem>
+                <MenuItem value="NOT_IN">Not In List</MenuItem>
+              </Select>
+            </FormControl>
+
+            <TextField
+              fullWidth
+              label="Value"
+              value={formData.value || ''}
+              onChange={(e) => handleInputChange('value', e.target.value)}
+              margin="normal"
+              size="small"
+              placeholder={formData.comparisonOperator === 'BETWEEN' ? 'min, max' : 
+                         formData.comparisonOperator === 'IN' ? 'value1, value2, value3' : 'Enter value'}
+              helperText={formData.comparisonOperator === 'BETWEEN' ? 'Enter two values separated by comma' :
+                         formData.comparisonOperator === 'IN' ? 'Enter multiple values separated by commas' : ''}
+            />
+          </>
         )}
 
         {selectedNode.type === 'distribution' && (
-          <TextField
-            fullWidth
-            label="Distribution Type"
-            value={formData.distributionType || ''}
-            onChange={(e) => handleInputChange('distributionType', e.target.value)}
-            margin="normal"
-            size="small"
-          />
+          <>
+            <FormControl fullWidth margin="normal" size="small">
+              <InputLabel>Distribution Type</InputLabel>
+              <Select
+                value={formData.distributionType || 'do_to_distribution'}
+                onChange={(e) => handleInputChange('distributionType', e.target.value)}
+                label="Distribution Type"
+              >
+                <MenuItem value="do_to_distribution">To Distribution</MenuItem>
+                <MenuItem value="do_campaign_distribution">Campaign Distribution</MenuItem>
+                <MenuItem value="do_event_distribution">Event Distribution</MenuItem>
+                <MenuItem value="do_behavior_distribution">Behavior Distribution</MenuItem>
+              </Select>
+            </FormControl>
+
+            <FormControl fullWidth margin="normal" size="small">
+              <InputLabel>Point Mapping Type</InputLabel>
+              <Select
+                value={formData.pointMappingType || 'VALUE_MULTIPLIER'}
+                onChange={(e) => handleInputChange('pointMappingType', e.target.value)}
+                label="Point Mapping Type"
+              >
+                <MenuItem value="VALUE_MULTIPLIER">Value Multiplier (value × X)</MenuItem>
+                <MenuItem value="FIXED_RATIO">Fixed Ratio (RATIO=X)</MenuItem>
+              </Select>
+            </FormControl>
+
+            <TextField
+              fullWidth
+              label={formData.pointMappingType === 'VALUE_MULTIPLIER' ? 'Multiplier' : 'Ratio'}
+              type="number"
+              value={formData.multiplier || ''}
+              onChange={(e) => handleInputChange('multiplier', parseFloat(e.target.value) || 0)}
+              margin="normal"
+              size="small"
+              placeholder={formData.pointMappingType === 'VALUE_MULTIPLIER' ? '1.5' : '0.1'}
+            />
+
+            {formData.pointMappingType === 'VALUE_MULTIPLIER' && (
+              <FormControl fullWidth margin="normal" size="small">
+                <InputLabel>Base Value Field</InputLabel>
+                <Select
+                  value={formData.baseValueField || 'value'}
+                  onChange={(e) => handleInputChange('baseValueField', e.target.value)}
+                  label="Base Value Field"
+                >
+                  <MenuItem value="value">Transaction Value</MenuItem>
+                  <MenuItem value="points">Points</MenuItem>
+                  <MenuItem value="amount">Amount</MenuItem>
+                </Select>
+              </FormControl>
+            )}
+          </>
         )}
       </Box>
     )

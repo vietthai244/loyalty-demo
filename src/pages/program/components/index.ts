@@ -15,11 +15,15 @@ export { CreateNodeButton } from './CreateNodeButton'
 export { NodePalette } from './NodePalette'
 export { NodePropertyPanel } from './NodePropertyPanel'
 export { NodeToolbar, createNodeToolbarActions } from './NodeToolbar'
+export { ProgramValidator, validateProgram } from './ProgramValidator'
+export { ProgramExporter } from './ProgramExporter'
 
 // Export types
 export type { NodeType } from './NodePalette'
 export type { NodeToolbarAction, NodeToolbarProps } from './NodeToolbar'
 export type { PanelMode } from './NodePropertyPanel'
+export type { ValidationIssue, ValidationResult } from './ProgramValidator'
+export type { LoyaltyProgram as ExportedLoyaltyProgram, ExportOptions } from './ProgramExporter'
 
 // Union type for all node data
 import type { OperatorNodeData } from './OperatorNode'
