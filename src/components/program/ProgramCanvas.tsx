@@ -26,6 +26,7 @@ import { TemplateSelectionModal } from './TemplateSelectionModal'
 import { NodePropertyPanel } from './NodePropertyPanel'
 import { NodePalette } from './NodePalette'
 import { CreateNodeButton } from './CreateNodeButton'
+import { DryTestModal } from './components/DryTestModal'
 
 // Import node components
 import OperatorNode from './OperatorNode'
@@ -67,6 +68,9 @@ export default function ProgramCanvas({ mode }: ProgramCanvasProps) {
   
   // Template selection modal state
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false)
+  
+  // Dry test modal state
+  const [isDryTestModalOpen, setIsDryTestModalOpen] = useState(false)
   
   // Use custom hooks
   const programManagement = useProgramManagement(mode, id)
@@ -219,6 +223,14 @@ export default function ProgramCanvas({ mode }: ProgramCanvasProps) {
     setSaveAsData(prev => ({ ...prev, description }))
   }
 
+  const handleDryTest = () => {
+    setIsDryTestModalOpen(true)
+  }
+
+  const handleDryTestClose = () => {
+    setIsDryTestModalOpen(false)
+  }
+
   if (isInitialLoad) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -236,6 +248,7 @@ export default function ProgramCanvas({ mode }: ProgramCanvasProps) {
         onBack={handleBack}
         onSave={handleSave}
         onImport={handleImportProgram}
+        onDryTest={handleDryTest}
       />
 
       {/* React Flow Canvas */}
@@ -334,6 +347,13 @@ export default function ProgramCanvas({ mode }: ProgramCanvasProps) {
       <NotificationSnackbar
         notification={notification}
         onClose={handleNotificationClose}
+      />
+
+      {/* Dry Test Modal */}
+      <DryTestModal
+        open={isDryTestModalOpen}
+        onClose={handleDryTestClose}
+        program={currentProgram}
       />
     </Box>
   )

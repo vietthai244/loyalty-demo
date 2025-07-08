@@ -1,5 +1,5 @@
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material'
-import { Save as SaveIcon, ArrowBack as BackIcon } from '@mui/icons-material'
+import { Save as SaveIcon, ArrowBack as BackIcon, PlayArrow as PlayIcon } from '@mui/icons-material'
 import { ProgramExporter } from '../ProgramExporter'
 import type { LoyaltyProgram } from '../hooks/useProgramManagement'
 
@@ -9,6 +9,7 @@ interface ProgramToolbarProps {
   onBack: () => void
   onSave: () => void
   onImport: (program: any) => void
+  onDryTest: () => void
 }
 
 export function ProgramToolbar({ 
@@ -16,7 +17,8 @@ export function ProgramToolbar({
   currentProgram, 
   onBack, 
   onSave, 
-  onImport 
+  onImport,
+  onDryTest
 }: ProgramToolbarProps) {
   return (
     <AppBar position="static" color="default" elevation={1}>
@@ -34,6 +36,16 @@ export function ProgramToolbar({
         </Typography>
         
         <Box sx={{ display: 'flex', gap: 1 }}>
+          <Button
+            startIcon={<PlayIcon />}
+            onClick={onDryTest}
+            variant="outlined"
+            color="primary"
+            disabled={!currentProgram || currentProgram.nodes.length === 0}
+          >
+            Dry Test
+          </Button>
+          
           <ProgramExporter
             program={currentProgram}
             onImport={onImport}
