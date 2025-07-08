@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material'
 import { Handle, Position } from '@xyflow/react'
 import { NodeToolbar, createNodeToolbarActions } from './NodeToolbar'
 import { CreateNodeButton } from './CreateNodeButton'
+import { useNodeHandlers } from '../ProgramCanvas'
 
 export interface OperatorNodeData {
   label: string
@@ -15,22 +16,20 @@ interface OperatorNodeProps {
     label: string
     operatorType: string
     isActive: boolean
-    onEdit: () => void
-    onDelete: () => void
-    onToggleActive: () => void
-    onOpenPalette: (nodeId?: string, handle?: 'top' | 'bottom') => void
   }
   selected?: boolean
   id?: string
 }
 
 const OperatorNode = ({ data, selected = false, id = '' }: OperatorNodeProps) => {
+  const handlers = useNodeHandlers()
+  
   const toolbarActions = createNodeToolbarActions(
     id,
     { 
-      onDelete: data.onDelete, 
-      onEdit: data.onEdit, 
-      onToggleActive: data.onToggleActive 
+      onDelete: handlers.onDelete, 
+      onEdit: handlers.onEdit, 
+      onToggleActive: handlers.onToggleActive 
     },
     { isActive: data.isActive }
   )
@@ -56,7 +55,7 @@ const OperatorNode = ({ data, selected = false, id = '' }: OperatorNodeProps) =>
         },
       }}
     >
-      <Handle type="target" position={Position.Top} />
+      <Handle type="target" position={Position.Left} id="left" />
       
       <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1976d2', mb: 1 }}>
         {data.label}
@@ -73,13 +72,13 @@ const OperatorNode = ({ data, selected = false, id = '' }: OperatorNodeProps) =>
         offset={8}
       />
 
-      <Handle type="source" position={Position.Bottom} />
+      <Handle type="source" position={Position.Right} id="right" />
       
       <CreateNodeButton
         variant="text"
-        onOpenPalette={data.onOpenPalette}
+        onOpenPalette={handlers.onOpenPalette}
         nodeId={data.label}
-        handle="bottom"
+        handle="right"
       />
     </Box>
   )

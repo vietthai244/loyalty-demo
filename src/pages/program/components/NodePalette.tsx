@@ -41,9 +41,9 @@ interface NodePaletteProps {
   isOpen: boolean
   onClose: () => void
   onDragStart: (event: React.DragEvent, nodeType: NodeType) => void
-  onNodeClick: (nodeType: NodeType, sourceNodeId?: string, sourceHandle?: 'top' | 'bottom') => void
+  onNodeClick: (nodeType: NodeType, sourceNodeId?: string, sourceHandle?: 'top' | 'bottom' | 'left' | 'right') => void
   sourceNodeId?: string
-  sourceHandle?: 'top' | 'bottom'
+  sourceHandle?: 'top' | 'bottom' | 'left' | 'right'
 }
 
 export function NodePalette({ 

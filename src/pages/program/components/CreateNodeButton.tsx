@@ -2,11 +2,11 @@ import { Box, Typography, IconButton } from '@mui/material'
 import { Add as AddIcon } from '@mui/icons-material'
 
 interface CreateNodeButtonProps {
-  onOpenPalette: (nodeId?: string, handle?: 'top' | 'bottom') => void
+  onOpenPalette: (nodeId?: string, handle?: 'top' | 'bottom' | 'left' | 'right') => void
   variant?: 'center' | 'handle' | 'corner' | 'text'
   size?: 'small' | 'medium' | 'large'
   nodeId?: string
-  handle?: 'top' | 'bottom'
+  handle?: 'top' | 'bottom' | 'left' | 'right'
   customStyles?: {
     container?: any
     button?: any

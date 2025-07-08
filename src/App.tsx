@@ -20,7 +20,8 @@ import {
   CardGiftcard as ProgramIcon,
 } from "@mui/icons-material";
 import "./App.css";
-import Program from "./pages/program/page";
+import ProgramDashboard from "./pages/program/page";
+import ProgramCanvas from "./pages/program/ProgramCanvas";
 
 const drawerWidth = 240;
 
@@ -164,7 +165,9 @@ function App() {
         >
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/program" element={<Program />} />
+            <Route path="/program" element={<ProgramDashboard />} />
+            <Route path="/program/create" element={<ProgramCanvas />} />
+            <Route path="/program/edit/:id" element={<ProgramCanvas />} />
           </Routes>
         </Box>
       </Box>

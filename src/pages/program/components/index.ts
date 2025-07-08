@@ -17,6 +17,7 @@ export { NodePropertyPanel } from './NodePropertyPanel'
 export { NodeToolbar, createNodeToolbarActions } from './NodeToolbar'
 export { ProgramValidator, validateProgram } from './ProgramValidator'
 export { ProgramExporter } from './ProgramExporter'
+export { TemplateSelectionModal, PREDEFINED_TEMPLATES } from './TemplateSelectionModal'
 
 // Export types
 export type { NodeType } from './NodePalette'
@@ -24,6 +25,7 @@ export type { NodeToolbarAction, NodeToolbarProps } from './NodeToolbar'
 export type { PanelMode } from './NodePropertyPanel'
 export type { ValidationIssue, ValidationResult } from './ProgramValidator'
 export type { LoyaltyProgram as ExportedLoyaltyProgram, ExportOptions } from './ProgramExporter'
+export type { ProgramTemplate } from './TemplateSelectionModal'
 
 // Union type for all node data
 import type { OperatorNodeData } from './OperatorNode'

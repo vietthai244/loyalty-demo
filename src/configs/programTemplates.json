@@ -1,0 +1,568 @@
+{
+  "templates": [
+    {
+      "id": "basic-reward-flow",
+      "name": "Basic Reward Flow",
+      "description": "A simple reward program that gives points for transactions above a certain value",
+      "category": "Rewards",
+      "complexity": "basic",
+      "tags": ["points", "transaction", "basic"],
+      "nodes": [
+        {
+          "id": "constraint-1",
+          "type": "constraint",
+          "position": { "x": 100, "y": 100 },
+          "data": {
+            "label": "Transaction Value Check",
+            "isActive": true,
+            "parameter": "value",
+            "comparisonOperator": "GREATER_OR_EQUAL",
+            "value": "100000"
+          }
+        },
+        {
+          "id": "operator-1",
+          "type": "operator",
+          "position": { "x": 400, "y": 100 },
+          "data": {
+            "label": "Sum Points",
+            "isActive": true,
+            "operatorType": "SUM"
+          }
+        },
+        {
+          "id": "distribution-1",
+          "type": "distribution",
+          "position": { "x": 700, "y": 100 },
+          "data": {
+            "label": "Point Distribution",
+            "isActive": true,
+            "distributionType": "do_to_distribution",
+            "pointMappingType": "VALUE_MULTIPLIER",
+            "multiplier": 0.1,
+            "baseValueField": "value"
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "edge-1",
+          "source": "constraint-1",
+          "target": "operator-1",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "edge-2",
+          "source": "operator-1",
+          "target": "distribution-1",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        }
+      ]
+    },
+    {
+      "id": "tiered-loyalty-system",
+      "name": "Tiered Loyalty System",
+      "description": "Advanced loyalty program with multiple tiers based on customer spending levels",
+      "category": "Loyalty",
+      "complexity": "intermediate",
+      "tags": ["tiers", "loyalty", "advanced"],
+      "nodes": [
+        {
+          "id": "constraint-1",
+          "type": "constraint",
+          "position": { "x": 100, "y": 100 },
+          "data": {
+            "label": "Bronze Tier Check",
+            "isActive": true,
+            "parameter": "totalSpent",
+            "comparisonOperator": "GREATER_OR_EQUAL",
+            "value": "50000"
+          }
+        },
+        {
+          "id": "constraint-2",
+          "type": "constraint",
+          "position": { "x": 400, "y": 100 },
+          "data": {
+            "label": "Silver Tier Check",
+            "isActive": true,
+            "parameter": "totalSpent",
+            "comparisonOperator": "GREATER_OR_EQUAL",
+            "value": "200000"
+          }
+        },
+        {
+          "id": "constraint-3",
+          "type": "constraint",
+          "position": { "x": 700, "y": 100 },
+          "data": {
+            "label": "Gold Tier Check",
+            "isActive": true,
+            "parameter": "totalSpent",
+            "comparisonOperator": "GREATER_OR_EQUAL",
+            "value": "500000"
+          }
+        },
+        {
+          "id": "rule-1",
+          "type": "rule",
+          "position": { "x": 100, "y": 300 },
+          "data": {
+            "label": "Bronze Benefits",
+            "isActive": true,
+            "ruleType": "CONDITIONAL",
+            "conditions": ["constraint-1"]
+          }
+        },
+        {
+          "id": "rule-2",
+          "type": "rule",
+          "position": { "x": 400, "y": 300 },
+          "data": {
+            "label": "Silver Benefits",
+            "isActive": true,
+            "ruleType": "CONDITIONAL",
+            "conditions": ["constraint-2"]
+          }
+        },
+        {
+          "id": "rule-3",
+          "type": "rule",
+          "position": { "x": 700, "y": 300 },
+          "data": {
+            "label": "Gold Benefits",
+            "isActive": true,
+            "ruleType": "CONDITIONAL",
+            "conditions": ["constraint-3"]
+          }
+        },
+        {
+          "id": "distribution-1",
+          "type": "distribution",
+          "position": { "x": 100, "y": 500 },
+          "data": {
+            "label": "Bronze Rewards",
+            "isActive": true,
+            "distributionType": "do_to_distribution",
+            "pointMappingType": "FIXED_AMOUNT",
+            "fixedAmount": 100
+          }
+        },
+        {
+          "id": "distribution-2",
+          "type": "distribution",
+          "position": { "x": 400, "y": 500 },
+          "data": {
+            "label": "Silver Rewards",
+            "isActive": true,
+            "distributionType": "do_to_distribution",
+            "pointMappingType": "FIXED_AMOUNT",
+            "fixedAmount": 250
+          }
+        },
+        {
+          "id": "distribution-3",
+          "type": "distribution",
+          "position": { "x": 700, "y": 500 },
+          "data": {
+            "label": "Gold Rewards",
+            "isActive": true,
+            "distributionType": "do_to_distribution",
+            "pointMappingType": "FIXED_AMOUNT",
+            "fixedAmount": 500
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "edge-1",
+          "source": "constraint-1",
+          "target": "rule-1",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "edge-2",
+          "source": "constraint-2",
+          "target": "rule-2",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "edge-3",
+          "source": "constraint-3",
+          "target": "rule-3",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "edge-4",
+          "source": "rule-1",
+          "target": "distribution-1",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "edge-5",
+          "source": "rule-2",
+          "target": "distribution-2",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "edge-6",
+          "source": "rule-3",
+          "target": "distribution-3",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        }
+      ]
+    },
+    {
+      "id": "complex-loyalty-program",
+      "name": "Advanced Program Example",
+      "description": "A detailed loyalty program showcasing nested operators, diverse constraints, and multiple distribution types.",
+      "category": "Loyalty",
+      "complexity": "complex",
+      "tags": ["nested", "operators", "multi-tier", "rewards", "transaction", "location", "time", "behavior"],
+      "nodes": [
+        {
+          "id": "root-op-sum",
+          "type": "operator",
+          "position": { "x": 100, "y": 100 },
+          "data": {
+            "label": "Overall SUM",
+            "isActive": true,
+            "operatorType": "SUM"
+          }
+        },
+        {
+          "id": "op-max-tier",
+          "type": "operator",
+          "position": { "x": 400, "y": 100 },
+          "data": {
+            "label": "Max Tier Logic",
+            "isActive": true,
+            "operatorType": "MAX"
+          }
+        },
+        {
+          "id": "op-share-branches",
+          "type": "operator",
+          "position": { "x": 400, "y": 800 },
+          "data": {
+            "label": "Share Branches",
+            "isActive": true,
+            "operatorType": "SHARE"
+          }
+        },
+        {
+          "id": "rr-1",
+          "type": "rule",
+          "position": { "x": 700, "y": 50 },
+          "data": {
+            "label": "Reward Rule 1",
+            "isActive": true
+          }
+        },
+        {
+          "id": "con-rr1-tx-value",
+          "type": "constraint",
+          "position": { "x": 1000, "y": 50 },
+          "data": {
+            "label": "Tx Value >= 300K",
+            "isActive": true,
+            "parameter": "tx_type",
+            "comparisonOperator": "GREATER_OR_EQUAL",
+            "value": "300000"
+          }
+        },
+        {
+          "id": "dist-rr1",
+          "type": "distribution",
+          "position": { "x": 1300, "y": 50 },
+          "data": {
+            "label": "Distribute Value * 1",
+            "isActive": true,
+            "distributionType": "do_to_distribution",
+            "pointMappingType": "VALUE_MULTIPLIER",
+            "multiplier": 1,
+            "baseValueField": "value"
+          }
+        },
+        {
+          "id": "rr-2",
+          "type": "rule",
+          "position": { "x": 700, "y": 200 },
+          "data": {
+            "label": "Reward Rule 2",
+            "isActive": true
+          }
+        },
+        {
+          "id": "con-rr2-value-1m",
+          "type": "constraint",
+          "position": { "x": 1000, "y": 200 },
+          "data": {
+            "label": "Value >= 1M",
+            "isActive": true,
+            "parameter": "value",
+            "comparisonOperator": "GREATER_OR_EQUAL",
+            "value": "1000000"
+          }
+        },
+        {
+          "id": "dist-rr2",
+          "type": "distribution",
+          "position": { "x": 1300, "y": 200 },
+          "data": {
+            "label": "Distribute Value * 0.2",
+            "isActive": true,
+            "distributionType": "do_to_distribution",
+            "pointMappingType": "VALUE_MULTIPLIER",
+            "multiplier": 0.2,
+            "baseValueField": "value"
+          }
+        },
+        {
+          "id": "rr-3",
+          "type": "rule",
+          "position": { "x": 700, "y": 350 },
+          "data": {
+            "label": "Reward Rule 3",
+            "isActive": true
+          }
+        },
+        {
+          "id": "con-rr3-value-1-5m",
+          "type": "constraint",
+          "position": { "x": 1000, "y": 350 },
+          "data": {
+            "label": "Value >= 1.5M",
+            "isActive": true,
+            "parameter": "value",
+            "comparisonOperator": "GREATER_OR_EQUAL",
+            "value": "1500000"
+          }
+        },
+        {
+          "id": "dist-rr3",
+          "type": "distribution",
+          "position": { "x": 1300, "y": 350 },
+          "data": {
+            "label": "Distribute Value * 0.4",
+            "isActive": true,
+            "distributionType": "do_to_distribution",
+            "pointMappingType": "VALUE_MULTIPLIER",
+            "multiplier": 0.4,
+            "baseValueField": "value"
+          }
+        },
+        {
+          "id": "rr-4",
+          "type": "rule",
+          "position": { "x": 700, "y": 500 },
+          "data": {
+            "label": "Reward Rule 4",
+            "isActive": true
+          }
+        },
+        {
+          "id": "op-rr4-and",
+          "type": "operator",
+          "position": { "x": 1000, "y": 500 },
+          "data": {
+            "label": "AND Logic for RR4",
+            "isActive": true,
+            "operatorType": "AND"
+          }
+        },
+        {
+          "id": "con-rr4-location",
+          "type": "constraint",
+          "position": { "x": 1300, "y": 450 },
+          "data": {
+            "label": "Location In HCM/HNI",
+            "isActive": true,
+            "parameter": "location",
+            "comparisonOperator": "IN",
+            "value": ["HCM", "HNI"]
+          }
+        },
+        {
+          "id": "op-rr4-or-time",
+          "type": "operator",
+          "position": { "x": 1300, "y": 600 },
+          "data": {
+            "label": "Time OR Logic",
+            "isActive": true,
+            "operatorType": "OR"
+          }
+        },
+        {
+          "id": "con-rr4-time1",
+          "type": "constraint",
+          "position": { "x": 1600, "y": 550 },
+          "data": {
+            "label": "Time Between 10-12",
+            "isActive": true,
+            "parameter": "time",
+            "comparisonOperator": "BETWEEN",
+            "value": ["10:00", "12:00"]
+          }
+        },
+        {
+          "id": "con-rr4-time2",
+          "type": "constraint",
+          "position": { "x": 1600, "y": 700 },
+          "data": {
+            "label": "Time Between 14-16",
+            "isActive": true,
+            "parameter": "time",
+            "comparisonOperator": "BETWEEN",
+            "value": ["14:00", "16:00"]
+          }
+        },
+        {
+          "id": "dist-rr4",
+          "type": "distribution",
+          "position": { "x": 1900, "y": 600 },
+          "data": {
+            "label": "Distribute Campaign Ratio 1.5",
+            "isActive": true,
+            "distributionType": "do_campaign_distribution",
+            "pointMappingType": "RATIO_MULTIPLIER",
+            "ratio": 1.5
+          }
+        },
+        {
+          "id": "rr-5",
+          "type": "rule",
+          "position": { "x": 700, "y": 950 },
+          "data": {
+            "label": "Reward Rule 5",
+            "isActive": true
+          }
+        },
+        {
+          "id": "con-rr5-tx-groupbuy",
+          "type": "constraint",
+          "position": { "x": 1000, "y": 950 },
+          "data": {
+            "label": "Tx Type Group Buy",
+            "isActive": true,
+            "parameter": "tx_type",
+            "comparisonOperator": "EQUAL",
+            "value": "group_buy"
+          }
+        },
+        {
+          "id": "dist-rr5",
+          "type": "distribution",
+          "position": { "x": 1300, "y": 950 },
+          "data": {
+            "label": "Distribute Event Ratio 1.1",
+            "isActive": true,
+            "distributionType": "do_event_distribution",
+            "pointMappingType": "RATIO_MULTIPLIER",
+            "ratio": 1.1
+          }
+        },
+        {
+          "id": "rr-6",
+          "type": "rule",
+          "position": { "x": 700, "y": 1100 },
+          "data": {
+            "label": "Reward Rule 6",
+            "isActive": true
+          }
+        },
+        {
+          "id": "op-rr6-and",
+          "type": "operator",
+          "position": { "x": 1000, "y": 1100 },
+          "data": {
+            "label": "AND Logic for RR6",
+            "isActive": true,
+            "operatorType": "AND"
+          }
+        },
+        {
+          "id": "con-rr6-tx-groupbuy",
+          "type": "constraint",
+          "position": { "x": 1300, "y": 1050 },
+          "data": {
+            "label": "Tx Type Group Buy (RR6)",
+            "isActive": true,
+            "parameter": "tx_type",
+            "comparisonOperator": "EQUAL",
+            "value": "group_buy"
+          }
+        },
+        {
+          "id": "con-rr6-actor-creator",
+          "type": "constraint",
+          "position": { "x": 1300, "y": 1200 },
+          "data": {
+            "label": "Actor Group Buy Creator",
+            "isActive": true,
+            "parameter": "actor",
+            "comparisonOperator": "EQUAL",
+            "value": "group_buy_creator"
+          }
+        },
+        {
+          "id": "dist-rr6",
+          "type": "distribution",
+          "position": { "x": 1600, "y": 1100 },
+          "data": {
+            "label": "Distribute Behavior Ratio 0.2",
+            "isActive": true,
+            "distributionType": "do_behavior_distribution",
+            "pointMappingType": "RATIO_MULTIPLIER",
+            "ratio": 0.2
+          }
+        }
+      ],
+      "edges": [
+        { "id": "e-root-sum-to-max", "source": "root-op-sum", "target": "op-max-tier", "sourceHandle": "right", "targetHandle": "left" },
+        { "id": "e-root-sum-to-share", "source": "root-op-sum", "target": "op-share-branches", "sourceHandle": "right", "targetHandle": "left" },
+
+        { "id": "e-max-to-rr1", "source": "op-max-tier", "target": "rr-1", "sourceHandle": "right", "targetHandle": "left" },
+        { "id": "e-max-to-rr2", "source": "op-max-tier", "target": "rr-2", "sourceHandle": "right", "targetHandle": "left" },
+        { "id": "e-max-to-rr3", "source": "op-max-tier", "target": "rr-3", "sourceHandle": "right", "targetHandle": "left" },
+
+        { "id": "e-rr1-to-con", "source": "rr-1", "target": "con-rr1-tx-value", "sourceHandle": "right", "targetHandle": "left" },
+        { "id": "e-con-rr1-to-dist", "source": "con-rr1-tx-value", "target": "dist-rr1", "sourceHandle": "right", "targetHandle": "left" },
+
+        { "id": "e-rr2-to-con", "source": "rr-2", "target": "con-rr2-value-1m", "sourceHandle": "right", "targetHandle": "left" },
+        { "id": "e-con-rr2-to-dist", "source": "con-rr2-value-1m", "target": "dist-rr2", "sourceHandle": "right", "targetHandle": "left" },
+
+        { "id": "e-rr3-to-con", "source": "rr-3", "target": "con-rr3-value-1-5m", "sourceHandle": "right", "targetHandle": "left" },
+        { "id": "e-con-rr3-to-dist", "source": "con-rr3-value-1-5m", "target": "dist-rr3", "sourceHandle": "right", "targetHandle": "left" },
+
+        { "id": "e-share-to-rr4", "source": "op-share-branches", "target": "rr-4", "sourceHandle": "right", "targetHandle": "left" },
+        { "id": "e-share-to-rr5", "source": "op-share-branches", "target": "rr-5", "sourceHandle": "right", "targetHandle": "left" },
+        { "id": "e-share-to-rr6", "source": "op-share-branches", "target": "rr-6", "sourceHandle": "right", "targetHandle": "left" },
+
+        { "id": "e-rr4-to-op-and", "source": "rr-4", "target": "op-rr4-and", "sourceHandle": "right", "targetHandle": "left" },
+        { "id": "e-op-rr4-and-to-con-loc", "source": "op-rr4-and", "target": "con-rr4-location", "sourceHandle": "right", "targetHandle": "left" },
+        { "id": "e-op-rr4-and-to-op-or", "source": "op-rr4-and", "target": "op-rr4-or-time", "sourceHandle": "right", "targetHandle": "left" },
+        { "id": "e-op-rr4-or-to-con-time1", "source": "op-rr4-or-time", "target": "con-rr4-time1", "sourceHandle": "right", "targetHandle": "left" },
+        { "id": "e-op-rr4-or-to-con-time2", "source": "op-rr4-or-time", "target": "con-rr4-time2", "sourceHandle": "right", "targetHandle": "left" },
+        { "id": "e-op-rr4-and-to-dist", "source": "op-rr4-and", "target": "dist-rr4", "sourceHandle": "right", "targetHandle": "left" },
+
+
+        { "id": "e-rr5-to-con", "source": "rr-5", "target": "con-rr5-tx-groupbuy", "sourceHandle": "right", "targetHandle": "left" },
+        { "id": "e-con-rr5-to-dist", "source": "con-rr5-tx-groupbuy", "target": "dist-rr5", "sourceHandle": "right", "targetHandle": "left" },
+
+        { "id": "e-rr6-to-op-and", "source": "rr-6", "target": "op-rr6-and", "sourceHandle": "right", "targetHandle": "left" },
+        { "id": "e-op-rr6-and-to-con-tx", "source": "op-rr6-and", "target": "con-rr6-tx-groupbuy", "sourceHandle": "right", "targetHandle": "left" },
+        { "id": "e-op-rr6-and-to-con-actor", "source": "op-rr6-and", "target": "con-rr6-actor-creator", "sourceHandle": "right", "targetHandle": "left" },
+        { "id": "e-op-rr6-and-to-dist", "source": "op-rr6-and", "target": "dist-rr6", "sourceHandle": "right", "targetHandle": "left" }
+      ]
+    }
+  ]
+} 
