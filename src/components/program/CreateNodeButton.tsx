@@ -14,7 +14,6 @@ interface CreateNodeButtonProps {
     text?: any
   }
   showCenterButton?: boolean
-  isCreateMode?: boolean
   hasNodes?: boolean
 }
 
@@ -26,7 +25,6 @@ export function CreateNodeButton({
   handle,
   customStyles = {},
   showCenterButton,
-  isCreateMode = false,
   hasNodes = false
 }: CreateNodeButtonProps) {
   const shouldShowCenterButton = showCenterButton !== undefined 

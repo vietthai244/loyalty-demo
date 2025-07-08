@@ -1,16 +1,22 @@
-import { useRef, useEffect, useState, useMemo, useCallback } from 'react'
-import { 
-  ReactFlow, 
-  addEdge, 
-  useNodesState, 
-  useEdgesState, 
-  Controls, 
-  Background, 
+import { useRef, useEffect, useState } from 'react'
+import {
+  ReactFlow,
+  Background,
+  Controls,
   MiniMap,
+  addEdge,
+  useNodesState,
+  useEdgesState,
   ReactFlowProvider
 } from '@xyflow/react'
-import type { Node, Edge, NodeTypes } from '@xyflow/react'
+import type { Node, Edge } from '@xyflow/react'
 import { Box, Typography } from '@mui/material'
+import { ProgramToolbar } from './components/ProgramToolbar'
+import { NodePalette } from './NodePalette'
+import { NodePropertyPanel } from './NodePropertyPanel'
+import { CreateNodeButton } from './CreateNodeButton'
+import { DryTestModal } from './components/DryTestModal'
+import { ExportImageDialog } from './components/ExportImageDialog'
 import { useParams, useLocation, useNavigate } from 'react-router-dom'
 import '@xyflow/react/dist/style.css'
 
@@ -19,14 +25,9 @@ import { useProgramManagement } from './hooks/useProgramManagement'
 import { useNodeManagement } from './hooks/useNodeManagement'
 
 // Import components
-import { ProgramToolbar } from './components/ProgramToolbar'
 import { SaveAsDialog } from './components/SaveAsDialog'
 import { NotificationSnackbar } from './components/NotificationSnackbar'
 import { TemplateSelectionModal } from './TemplateSelectionModal'
-import { NodePropertyPanel } from './NodePropertyPanel'
-import { NodePalette } from './NodePalette'
-import { CreateNodeButton } from './CreateNodeButton'
-import { DryTestModal } from './components/DryTestModal'
 
 // Import node components
 import OperatorNode from './OperatorNode'
@@ -41,7 +42,7 @@ import type { ProgramTemplate } from './types'
 import { NodeHandlersProvider } from './context/NodeHandlersContext'
 
 // Node types configuration - defined outside component to prevent React Flow warnings
-const nodeTypes: NodeTypes = {
+const nodeTypes = {
   operator: (props: any) => <OperatorNode {...props} />,
   rule: (props: any) => <RuleNode {...props} />,
   constraint: (props: any) => <ConstraintNode {...props} />,
@@ -57,6 +58,7 @@ export default function ProgramCanvas({ mode }: ProgramCanvasProps) {
   const navigate = useNavigate()
   const location = useLocation()
   const reactFlowWrapper = useRef<HTMLDivElement>(null)
+  const [reactFlowInstance, setReactFlowInstance] = useState<any>(null)
   
   // Check if we're in create mode by looking at the pathname
   const isCreateMode = mode === 'create' || location.pathname === '/program/create'
@@ -71,6 +73,9 @@ export default function ProgramCanvas({ mode }: ProgramCanvasProps) {
   
   // Dry test modal state
   const [isDryTestModalOpen, setIsDryTestModalOpen] = useState(false)
+  
+  // Export image dialog state
+  const [isExportImageDialogOpen, setIsExportImageDialogOpen] = useState(false)
   
   // Use custom hooks
   const programManagement = useProgramManagement(mode, id)
@@ -92,7 +97,6 @@ export default function ProgramCanvas({ mode }: ProgramCanvasProps) {
   } = programManagement
 
   const {
-    selectedNode,
     isPaletteOpen,
     setIsPaletteOpen,
     isPanelVisible,
@@ -231,6 +235,14 @@ export default function ProgramCanvas({ mode }: ProgramCanvasProps) {
     setIsDryTestModalOpen(false)
   }
 
+  const handleExportImage = () => {
+    setIsExportImageDialogOpen(true)
+  }
+
+  const handleExportImageClose = () => {
+    setIsExportImageDialogOpen(false)
+  }
+
   if (isInitialLoad) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -249,13 +261,18 @@ export default function ProgramCanvas({ mode }: ProgramCanvasProps) {
         onSave={handleSave}
         onImport={handleImportProgram}
         onDryTest={handleDryTest}
+        onExportImage={handleExportImage}
       />
 
       {/* React Flow Canvas */}
       <Box sx={{ flexGrow: 1, position: 'relative' }}>
         <ReactFlowProvider>
           <NodeHandlersProvider handlers={handlersRef.current}>
-            <div ref={reactFlowWrapper} style={{ width: '100%', height: '100%' }}>
+            <div 
+              ref={reactFlowWrapper} 
+              data-testid="react-flow-wrapper"
+              style={{ width: '100%', height: '100%' }}
+            >
               <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -274,6 +291,7 @@ export default function ProgramCanvas({ mode }: ProgramCanvasProps) {
                   const reactFlowBounds = reactFlowWrapper.current?.getBoundingClientRect()
                   onDrop(event, reactFlowBounds, setNodes, setEditingNode, setPanelMode, setIsPanelVisible)
                 }}
+                onInit={setReactFlowInstance}
                 nodeTypes={nodeTypes}
                 fitView
                 attributionPosition="bottom-left"
@@ -283,12 +301,11 @@ export default function ProgramCanvas({ mode }: ProgramCanvasProps) {
                 <MiniMap />
                 
                 {/* Node creation button */}
-                <CreateNodeButton 
-                  size="large"
-                  onOpenPalette={openPalette} 
-                  isCreateMode={isCreateMode}
-                  hasNodes={nodes.length > 0}
-                />
+                            <CreateNodeButton
+              size="large"
+              onOpenPalette={openPalette}
+              hasNodes={nodes.length > 0}
+            />
               </ReactFlow>
             </div>
           </NodeHandlersProvider>
@@ -354,6 +371,15 @@ export default function ProgramCanvas({ mode }: ProgramCanvasProps) {
         open={isDryTestModalOpen}
         onClose={handleDryTestClose}
         program={currentProgram}
+      />
+
+      {/* Export Image Dialog */}
+      <ExportImageDialog
+        open={isExportImageDialogOpen}
+        onClose={handleExportImageClose}
+        reactFlowWrapper={reactFlowWrapper.current}
+        reactFlowInstance={reactFlowInstance}
+        programName={currentProgram?.name || 'Program'}
       />
     </Box>
   )

@@ -7,8 +7,7 @@ import {
   Typography,
   Box,
   Tabs,
-  Tab,
-  Divider
+  Tab
 } from '@mui/material'
 import { Close as CloseIcon, PlayArrow as PlayIcon } from '@mui/icons-material'
 import { useState } from 'react'
@@ -82,7 +81,7 @@ export function DryTestModal({ open, onClose, program }: DryTestModalProps) {
     onClose()
   }
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue)
   }
 

@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 import {
   Box,
   TextField,
-  Typography,
   Button,
+  Typography,
   FormControl,
   InputLabel,
   Select,
@@ -13,7 +13,7 @@ import {
   Divider
 } from '@mui/material'
 import { Refresh as RefreshIcon } from '@mui/icons-material'
-import type { ProgramNode, EventData } from '../../../utils/programEvaluator'
+import type { EventData } from '../../../utils/programEvaluator'
 
 interface EventDataInputProps {
   program: { nodes: any[]; edges: any[] } | null

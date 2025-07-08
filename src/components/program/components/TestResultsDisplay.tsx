@@ -9,12 +9,11 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Chip,
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Chip,
   Stack,
-  Divider,
   Alert,
   AlertTitle
 } from '@mui/material'
@@ -25,7 +24,7 @@ import {
   Info as InfoIcon,
   Warning as WarningIcon
 } from '@mui/icons-material'
-import type { DryTestResult, EvaluationLogEntry } from '../../../utils/programEvaluator'
+import type { DryTestResult } from '../../../utils/programEvaluator'
 
 interface TestResultsDisplayProps {
   results: DryTestResult | null
