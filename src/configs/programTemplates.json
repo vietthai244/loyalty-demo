@@ -11,7 +11,7 @@
         {
           "id": "constraint-1",
           "type": "constraint",
-          "position": { "x": 100, "y": 100 },
+          "position": { "x": 100, "y": 200 },
           "data": {
             "label": "Transaction Value Check",
             "isActive": true,
@@ -23,7 +23,7 @@
         {
           "id": "operator-1",
           "type": "operator",
-          "position": { "x": 400, "y": 100 },
+          "position": { "x": 450, "y": 200 },
           "data": {
             "label": "Sum Points",
             "isActive": true,
@@ -33,7 +33,7 @@
         {
           "id": "distribution-1",
           "type": "distribution",
-          "position": { "x": 700, "y": 100 },
+          "position": { "x": 800, "y": 200 },
           "data": {
             "label": "Point Distribution",
             "isActive": true,
@@ -82,38 +82,38 @@
           }
         },
         {
+          "id": "rule-1",
+          "type": "rule",
+          "position": { "x": 400, "y": 100 },
+          "data": {
+            "label": "Bronze Benefits",
+            "isActive": true,
+            "ruleType": "CONDITIONAL",
+            "conditions": ["constraint-1"]
+          }
+        },
+        {
+          "id": "distribution-1",
+          "type": "distribution",
+          "position": { "x": 700, "y": 100 },
+          "data": {
+            "label": "Bronze Rewards",
+            "isActive": true,
+            "distributionType": "do_to_distribution",
+            "pointMappingType": "FIXED_AMOUNT",
+            "fixedAmount": 100
+          }
+        },
+        {
           "id": "constraint-2",
           "type": "constraint",
-          "position": { "x": 400, "y": 100 },
+          "position": { "x": 100, "y": 300 },
           "data": {
             "label": "Silver Tier Check",
             "isActive": true,
             "parameter": "totalSpent",
             "comparisonOperator": "GREATER_OR_EQUAL",
             "value": "200000"
-          }
-        },
-        {
-          "id": "constraint-3",
-          "type": "constraint",
-          "position": { "x": 700, "y": 100 },
-          "data": {
-            "label": "Gold Tier Check",
-            "isActive": true,
-            "parameter": "totalSpent",
-            "comparisonOperator": "GREATER_OR_EQUAL",
-            "value": "500000"
-          }
-        },
-        {
-          "id": "rule-1",
-          "type": "rule",
-          "position": { "x": 100, "y": 300 },
-          "data": {
-            "label": "Bronze Benefits",
-            "isActive": true,
-            "ruleType": "CONDITIONAL",
-            "conditions": ["constraint-1"]
           }
         },
         {
@@ -128,38 +128,38 @@
           }
         },
         {
-          "id": "rule-3",
-          "type": "rule",
-          "position": { "x": 700, "y": 300 },
-          "data": {
-            "label": "Gold Benefits",
-            "isActive": true,
-            "ruleType": "CONDITIONAL",
-            "conditions": ["constraint-3"]
-          }
-        },
-        {
-          "id": "distribution-1",
-          "type": "distribution",
-          "position": { "x": 100, "y": 500 },
-          "data": {
-            "label": "Bronze Rewards",
-            "isActive": true,
-            "distributionType": "do_to_distribution",
-            "pointMappingType": "FIXED_AMOUNT",
-            "fixedAmount": 100
-          }
-        },
-        {
           "id": "distribution-2",
           "type": "distribution",
-          "position": { "x": 400, "y": 500 },
+          "position": { "x": 700, "y": 300 },
           "data": {
             "label": "Silver Rewards",
             "isActive": true,
             "distributionType": "do_to_distribution",
             "pointMappingType": "FIXED_AMOUNT",
             "fixedAmount": 250
+          }
+        },
+        {
+          "id": "constraint-3",
+          "type": "constraint",
+          "position": { "x": 100, "y": 500 },
+          "data": {
+            "label": "Gold Tier Check",
+            "isActive": true,
+            "parameter": "totalSpent",
+            "comparisonOperator": "GREATER_OR_EQUAL",
+            "value": "500000"
+          }
+        },
+        {
+          "id": "rule-3",
+          "type": "rule",
+          "position": { "x": 400, "y": 500 },
+          "data": {
+            "label": "Gold Benefits",
+            "isActive": true,
+            "ruleType": "CONDITIONAL",
+            "conditions": ["constraint-3"]
           }
         },
         {
@@ -185,29 +185,29 @@
         },
         {
           "id": "edge-2",
-          "source": "constraint-2",
-          "target": "rule-2",
-          "sourceHandle": "right",
-          "targetHandle": "left"
-        },
-        {
-          "id": "edge-3",
-          "source": "constraint-3",
-          "target": "rule-3",
-          "sourceHandle": "right",
-          "targetHandle": "left"
-        },
-        {
-          "id": "edge-4",
           "source": "rule-1",
           "target": "distribution-1",
           "sourceHandle": "right",
           "targetHandle": "left"
         },
         {
-          "id": "edge-5",
+          "id": "edge-3",
+          "source": "constraint-2",
+          "target": "rule-2",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "edge-4",
           "source": "rule-2",
           "target": "distribution-2",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "edge-5",
+          "source": "constraint-3",
+          "target": "rule-3",
           "sourceHandle": "right",
           "targetHandle": "left"
         },
@@ -225,7 +225,7 @@
       "name": "Advanced Program Example",
       "description": "A detailed loyalty program showcasing nested operators, diverse constraints, and multiple distribution types.",
       "category": "Loyalty",
-      "complexity": "complex",
+      "complexity": "advanced",
       "tags": ["nested", "operators", "multi-tier", "rewards", "transaction", "location", "time", "behavior"],
       "nodes": [
         {

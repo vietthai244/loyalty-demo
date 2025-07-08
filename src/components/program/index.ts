@@ -1,23 +1,37 @@
-// Node Components
+// Main components
+export { default as ProgramCanvas } from './ProgramCanvas'
+export { ProgramToolbar } from './components/ProgramToolbar'
+export { SaveAsDialog } from './components/SaveAsDialog'
+export { NotificationSnackbar } from './components/NotificationSnackbar'
+export { ProgramDashboard } from './components/ProgramDashboard'
+
+// Node components
 export { default as OperatorNode } from './OperatorNode'
 export { default as RuleNode } from './RuleNode'
 export { default as ConstraintNode } from './ConstraintNode'
 export { default as DistributionNode } from './DistributionNode'
+
+// UI components
+export { CreateNodeButton } from './CreateNodeButton'
+export { NodePalette } from './NodePalette'
+export { NodePropertyPanel } from './NodePropertyPanel'
+export { NodeToolbar } from './NodeToolbar'
+export { TemplateSelectionModal } from './TemplateSelectionModal'
+export { ProgramValidator } from './ProgramValidator'
+export { ProgramExporter } from './ProgramExporter'
+
+// Hooks
+export { useProgramManagement } from './hooks/useProgramManagement'
+export { useNodeManagement } from './hooks/useNodeManagement'
+
+// Types
+export * from './types'
 
 // Node Data Interfaces
 export type { OperatorNodeData } from './OperatorNode'
 export type { RuleNodeData } from './RuleNode'
 export type { ConstraintNodeData } from './ConstraintNode'
 export type { DistributionNodeData } from './DistributionNode'
-
-// UI Components
-export { CreateNodeButton } from './CreateNodeButton'
-export { NodePalette } from './NodePalette'
-export { NodePropertyPanel } from './NodePropertyPanel'
-export { NodeToolbar, createNodeToolbarActions } from './NodeToolbar'
-export { ProgramValidator, validateProgram } from './ProgramValidator'
-export { ProgramExporter } from './ProgramExporter'
-export { TemplateSelectionModal, PREDEFINED_TEMPLATES } from './TemplateSelectionModal'
 
 // Export types
 export type { NodeType } from './NodePalette'

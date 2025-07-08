@@ -2,26 +2,28 @@ import { Box, Typography } from '@mui/material'
 import { Handle, Position } from '@xyflow/react'
 import { NodeToolbar, createNodeToolbarActions } from './NodeToolbar'
 import { CreateNodeButton } from './CreateNodeButton'
-import { useNodeHandlers } from '../ProgramCanvas'
+import { useNodeHandlers } from './context/NodeHandlersContext'
 
-export interface ConstraintNodeData {
+export interface DistributionNodeData {
   label: string
-  constraintType?: 'LIMIT' | 'EXCLUSION' | 'REQUIREMENT'
-  description?: string
+  distributionType: string
+  pointMappingType?: string
+  multiplier?: number
+  baseValueField?: string
   isActive?: boolean
 }
 
-interface ConstraintNodeProps {
+interface DistributionNodeProps {
   data: {
     label: string
-    constraintType: string
+    distributionType: string
     isActive: boolean
   }
   selected?: boolean
   id?: string
 }
 
-const ConstraintNode = ({ data, selected = false, id = '' }: ConstraintNodeProps) => {
+const DistributionNode = ({ data, selected = false, id = '' }: DistributionNodeProps) => {
   const handlers = useNodeHandlers()
   
   const toolbarActions = createNodeToolbarActions(
@@ -39,9 +41,9 @@ const ConstraintNode = ({ data, selected = false, id = '' }: ConstraintNodeProps
       sx={{
         position: 'relative',
         padding: 2,
-        border: '2px solid #f44336',
+        border: '2px solid #4caf50',
         borderRadius: 2,
-        backgroundColor: data.isActive ? '#ffebee' : '#f5f5f5',
+        backgroundColor: data.isActive ? '#e8f5e8' : '#f5f5f5',
         minWidth: 150,
         minHeight: 80,
         display: 'flex',
@@ -57,11 +59,11 @@ const ConstraintNode = ({ data, selected = false, id = '' }: ConstraintNodeProps
     >
       <Handle type="target" position={Position.Left} id="left" />
       
-      <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#f44336', mb: 1 }}>
+      <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#4caf50', mb: 1 }}>
         {data.label}
       </Typography>
       <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        {data.constraintType}
+        {data.distributionType}
       </Typography>
 
       <NodeToolbar
@@ -77,11 +79,11 @@ const ConstraintNode = ({ data, selected = false, id = '' }: ConstraintNodeProps
       <CreateNodeButton
         variant="text"
         onOpenPalette={handlers.onOpenPalette}
-        nodeId={data.label}
+        nodeId={id}
         handle="right"
       />
     </Box>
   )
 }
 
-export default ConstraintNode 
+export default DistributionNode 

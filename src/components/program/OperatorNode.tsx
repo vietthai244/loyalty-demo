@@ -2,26 +2,26 @@ import { Box, Typography } from '@mui/material'
 import { Handle, Position } from '@xyflow/react'
 import { NodeToolbar, createNodeToolbarActions } from './NodeToolbar'
 import { CreateNodeButton } from './CreateNodeButton'
-import { useNodeHandlers } from '../ProgramCanvas'
+import { useNodeHandlers } from './context/NodeHandlersContext'
 
-export interface RuleNodeData {
+export interface OperatorNodeData {
   label: string
-  ruleType?: 'CONDITION' | 'THRESHOLD' | 'TIME_BASED'
+  operatorType?: 'SUM' | 'MAX' | 'SHARE' | 'AND' | 'OR'
   description?: string
   isActive?: boolean
 }
 
-interface RuleNodeProps {
+interface OperatorNodeProps {
   data: {
     label: string
-    ruleType: string
+    operatorType: string
     isActive: boolean
   }
   selected?: boolean
   id?: string
 }
 
-const RuleNode = ({ data, selected = false, id = '' }: RuleNodeProps) => {
+const OperatorNode = ({ data, selected = false, id = '' }: OperatorNodeProps) => {
   const handlers = useNodeHandlers()
   
   const toolbarActions = createNodeToolbarActions(
@@ -39,9 +39,9 @@ const RuleNode = ({ data, selected = false, id = '' }: RuleNodeProps) => {
       sx={{
         position: 'relative',
         padding: 2,
-        border: '2px solid #ff9800',
+        border: '2px solid #1976d2',
         borderRadius: 2,
-        backgroundColor: data.isActive ? '#fff3e0' : '#f5f5f5',
+        backgroundColor: data.isActive ? '#e3f2fd' : '#f5f5f5',
         minWidth: 150,
         minHeight: 80,
         display: 'flex',
@@ -57,11 +57,11 @@ const RuleNode = ({ data, selected = false, id = '' }: RuleNodeProps) => {
     >
       <Handle type="target" position={Position.Left} id="left" />
       
-      <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#ff9800', mb: 1 }}>
+      <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1976d2', mb: 1 }}>
         {data.label}
       </Typography>
       <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        {data.ruleType}
+        {data.operatorType}
       </Typography>
 
       <NodeToolbar
@@ -77,11 +77,11 @@ const RuleNode = ({ data, selected = false, id = '' }: RuleNodeProps) => {
       <CreateNodeButton
         variant="text"
         onOpenPalette={handlers.onOpenPalette}
-        nodeId={data.label}
+        nodeId={id}
         handle="right"
       />
     </Box>
   )
 }
 
-export default RuleNode 
+export default OperatorNode 

@@ -19,7 +19,7 @@ import {
   Category as CategoryIcon
 } from '@mui/icons-material'
 import type { Node, Edge } from '@xyflow/react'
-import programTemplates from '../../../configs/programTemplates.json'
+import programTemplates from '../../configs/programTemplates.json'
 
 export interface ProgramTemplate {
   id: string

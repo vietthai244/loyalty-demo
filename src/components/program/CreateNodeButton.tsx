@@ -13,6 +13,9 @@ interface CreateNodeButtonProps {
     icon?: any
     text?: any
   }
+  showCenterButton?: boolean
+  isCreateMode?: boolean
+  hasNodes?: boolean
 }
 
 export function CreateNodeButton({ 
@@ -21,8 +24,19 @@ export function CreateNodeButton({
   size = 'medium',
   nodeId,
   handle,
-  customStyles = {}
+  customStyles = {},
+  showCenterButton,
+  isCreateMode = false,
+  hasNodes = false
 }: CreateNodeButtonProps) {
+  const shouldShowCenterButton = showCenterButton !== undefined 
+    ? showCenterButton 
+    : !hasNodes
+
+  if (variant === 'center' && !shouldShowCenterButton) {
+    return null
+  }
+
   const getSizeStyles = () => {
     switch (size) {
       case 'small':

@@ -2,26 +2,27 @@ import { Box, Typography } from '@mui/material'
 import { Handle, Position } from '@xyflow/react'
 import { NodeToolbar, createNodeToolbarActions } from './NodeToolbar'
 import { CreateNodeButton } from './CreateNodeButton'
-import { useNodeHandlers } from '../ProgramCanvas'
+import { useNodeHandlers } from './context/NodeHandlersContext'
 
-export interface DistributionNodeData {
+export interface ConstraintNodeData {
   label: string
-  distributionType?: 'POINTS' | 'DISCOUNT' | 'REWARD'
-  description?: string
+  parameter: string
+  comparisonOperator?: string
+  value?: string
   isActive?: boolean
 }
 
-interface DistributionNodeProps {
+interface ConstraintNodeProps {
   data: {
     label: string
-    distributionType: string
+    parameter: string
     isActive: boolean
   }
   selected?: boolean
   id?: string
 }
 
-const DistributionNode = ({ data, selected = false, id = '' }: DistributionNodeProps) => {
+const ConstraintNode = ({ data, selected = false, id = '' }: ConstraintNodeProps) => {
   const handlers = useNodeHandlers()
   
   const toolbarActions = createNodeToolbarActions(
@@ -39,9 +40,9 @@ const DistributionNode = ({ data, selected = false, id = '' }: DistributionNodeP
       sx={{
         position: 'relative',
         padding: 2,
-        border: '2px solid #4caf50',
+        border: '2px solid #f44336',
         borderRadius: 2,
-        backgroundColor: data.isActive ? '#e8f5e8' : '#f5f5f5',
+        backgroundColor: data.isActive ? '#ffebee' : '#f5f5f5',
         minWidth: 150,
         minHeight: 80,
         display: 'flex',
@@ -57,11 +58,11 @@ const DistributionNode = ({ data, selected = false, id = '' }: DistributionNodeP
     >
       <Handle type="target" position={Position.Left} id="left" />
       
-      <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#4caf50', mb: 1 }}>
+      <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#f44336', mb: 1 }}>
         {data.label}
       </Typography>
       <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        {data.distributionType}
+        {data.parameter}
       </Typography>
 
       <NodeToolbar
@@ -77,11 +78,11 @@ const DistributionNode = ({ data, selected = false, id = '' }: DistributionNodeP
       <CreateNodeButton
         variant="text"
         onOpenPalette={handlers.onOpenPalette}
-        nodeId={data.label}
+        nodeId={id}
         handle="right"
       />
     </Box>
   )
 }
 
-export default DistributionNode 
+export default ConstraintNode 
