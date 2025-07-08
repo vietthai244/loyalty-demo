@@ -268,13 +268,13 @@ function buildDependencyGraph(context: EvaluationContext): void {
   
   // Check for nodes with no dependencies (root nodes)
   const rootNodes = Array.from(context.nodeStates.entries())
-    .filter(([nodeId, state]) => state.dependencies.length === 0)
+    .filter(([, state]) => state.dependencies.length === 0)
     .map(([nodeId]) => nodeId);
   console.log('🌳 Root nodes (no dependencies):', rootNodes);
   
   // Check for nodes with no dependents (leaf nodes)
   const leafNodes = Array.from(context.nodeStates.entries())
-    .filter(([nodeId, state]) => state.dependents.length === 0)
+    .filter(([, state]) => state.dependents.length === 0)
     .map(([nodeId]) => nodeId);
   console.log('🍃 Leaf nodes (no dependents):', leafNodes);
 }
